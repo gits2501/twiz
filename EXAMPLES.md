@@ -54,8 +54,8 @@ If there is no session data in url, function returns `undefined` and logs warnin
  There is a second argument that is passed to your 'tokenFound' handler. The onEnd(..) function.
 It's use is to specify your function that will end the request as you see fit. For instance when you would like to use a template engine. onEnd(..) fires afther access protected resources (api) call but it does not end the response.
 
-
-SERVER CODE >>>>> [
+*node.js:*
+```js
   app.on('tokenFound', function(found, onEnd){
 
      found                        
@@ -71,22 +71,24 @@ SERVER CODE >>>>> [
                                                                 // Ends response internally
      })
   })
-]
+```
 
-When we get the accessToken in our promise then twiz gets api data and calls your onEnd callback with that data and response stream.
+When we get the `access token` in our promise then twiz gets api data and calls your onEnd callback with that data and response stream.
 So we've sent the rendered html with user.name from data we got from  twitter's statuses/update.json
 api. When you are specifying the onEnd function then it must end the response or else the request will hang. 
 
 Also if your workflow requires front-end template rendering. You can instead on res.render use :
->>> res.redirect(302,'/signedInUI');  // redirects the client to the signedInUI template
+```js
+res.redirect(302,'/signedInUI');  // redirects the client to the signedInUI template
+```
+Then the `twizlent.finishOAuth(..)` will get this `signedInUI` template in it's `o.data`.
 
-Then the twizlent.finishOAuth(..) will get this 'signedInUI' template in it's 'o.data'.
-
-| beforeSend |
+## beforeSend 
 
 On client side the args.options object can alse have a 'beforeSend' property. It is a function that allows your to manipulate xhr instance before request is sent.
-browser code >>>>
-[   
+
+*browser:*
+```js   
 // https://myApp.com
   btn.addListener('onClick', function(){                  // lets say we initiate oauth on click event
      let args = {
@@ -108,15 +110,16 @@ browser code >>>>
        }
      } 
 
-]
+```
 
 
-| Callback |
-The args object can have the 'callback' property. You can specify there your callback function which will run if two cases are met:
+## Callback 
+The args object can have the 'callback' property. You can specify there your callback function which will run **only** if
 
-1. Promise is not avalable
-2. You've set the callback property
+1. **Promise is not avalable**
+If there is `Promise`, function always returns promise.
 
+```js
 args = {
    ...
    ...
@@ -138,16 +141,17 @@ try{
 catch(err){
    // twiz errors
 }
-
+```
 
 If promise is not avalale and there is no callback specified you'le get and error 'noCallbackFunc' see errors[link]
 
-| Stream |
+## Stream 
 
 With twiz using stream means using third party STREAM and/or REST libraries, while letting twiz to take care only for user authentication, that is getting an access token. In other words stream efectively turns off built in REST capability.
 Specify stream in client by passing 'args.stream = true'. 
 
-BROWSER [
+*browser:*
+```js
   ...
   let twizlent = twizClient();
 
@@ -175,12 +179,11 @@ BROWSER [
   twizlent.finishOAuth(args)
   .then(..)
  
-]
-
+```
 Then on server you can do the following:
 
-SERVER
-[
+*node.js:*
+```js
    app.use(twizer)                                           // instance of twiz-server
 
    app.on('hasteOrOAuth', function(twiz, verifyCredentials){
@@ -228,7 +231,7 @@ SERVER
 
       // your code for STREAM and/or REST apis ...
    })
-]
+```
 
 Instead of baking in something like onStream(..) function that would handle your own 'stream/rest'requests, in 'hasteOrOAuth' and 'tokenFound' events you are given 3 basic building blocks for creating such 'onStream' handler. With the exception of accessToken that you've got already, they are:
   twiz.stream         // flag that indicates request wants third party stream/rest capability
@@ -244,10 +247,12 @@ So you can easily see something like onStream handler that:
 As you can see, twiz is not keen to stuff potentialy security sensitive data to 'app' or 'req' objects. It is given to your judgement to place your data where you see fit. 'app' is used as storage in example just as an ilustration of a purpose, maybe you whould want some caching solution like redis/memcache. 
 
 
-| Chunked responses| 
+## Chunked responses 
 When making stream requests the response often come as series of data chunks[link] from other end. To consume response in chunk by chunk manner set xhr.onprogress(..)[link] callback in beforeSend function:
->>>>> [
-  let args = {
+
+*browser:*
+ ```js
+ let args = {
       ...
       options:{
          ...
@@ -259,12 +264,18 @@ When making stream requests the response often come as series of data chunks[lin
          }
       }
   }
+```  
 A reference[link] on how to consume chunks. 
-1. If your not sending  'content-type'.
-      It is good idea to set 'content-type' header on your server before you proxy first chunk back to client or else when stream finialy ends promise will reject with 'noContentType' error. But your will be already consumed in your in onprogress(..) callback.
 
-2. If you are sending content-type.
-When your stream is consumed in onprogress() and it ends the promise will still resolve and you will have all your data that stream emmited in o.data. Since your getting your data in onprogress(..) you might not want to receive it in your promise too. Same goes if your using callbacks and not promises. To stop all data from stream to resolve in promise set 'chunked=true' in args.options.
+1. If your not sending  `content-type`.
+
+   It is good idea to set 'content-type' header on your server before you proxy first chunk back to client or else when stream finialy ends promise will reject with 'noContentType' error. But your will be already consumed in your in onprogress(..) callback.
+
+2. If you are sending `content-type`.
+
+   When your stream is consumed in onprogress() and it ends the promise will still resolve and you will have all your data that stream emmited in o.data. Since your getting your data in onprogress(..) you might not want to receive it in your promise too. Same goes if your using callbacks and not promises. To stop all data from stream to resolve in promise set 'chunked=true' in args.options.
+
+*browser:*  
  let args = {
     ...
     options = {
@@ -273,6 +284,5 @@ When your stream is consumed in onprogress() and it ends the promise will still 
     }
  }
   
-]
-
-By setting 'chunked' you dont have to worry about sending content-type, it will make the promise reject with error 'chunkedResponseWarning' no matter the presents of content-type header. So you have consistent behavior, when you would want to consume chunks only in xhr.onprogress(..) handler.   
+```
+By setting `chunked` you dont have to worry about sending `content-type`, it will make the promise reject with error `chunkedResponseWarning` no matter the presents of `content-type header`. So you have consistent behavior, when you would want to consume chunks only in `xhr.onprogress(..)` handler.   
