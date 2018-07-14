@@ -1,31 +1,31 @@
-# twiz
+# twiz (work in progress)
 
 Twitter OAuth wizard.
 
-Twiz does authentication and/or authorization to Twitter with OAuth 1.0a, has built in `REST` api support and also supports third party STREAM and REST libs.
+Twiz does authentication and/or authorization to Twitter with OAuth 1.0a, has built in `REST` api support and also supports third party `STREAM` and `REST` libs.
 
 ## Intro
-Many Twitter apis require user authentication (access token) before usage. OAuth 1.0a is (essencially a digital signature) process of letting know who (which app) wants to use an api and on which user's behalf. More verbose - you tell Twitter who you are, if twitter is ok with you it lets you to ask an user of your website (with twitter account), on authorization page, if he/she agrees that you act on its behalf (like post tweets on user's profile ect ...)
+Many Twitter apis require user authentication (access token) before usage. OAuth 1.0a is (essencially a digital signature) process of letting know who (which app) wants to use an api and on which user's behalf. In other words you tell Twitter who you are, if twitter is ok with you it lets you to ask an user of your website (with twitter account), on authorization page, if he/she agrees that you act on its behalf (like post tweets on user's profile ect ...)
 
 It happens to be a 3-leg (step) dance, it's implementation could look like this:
 (------------------------- picture 1.0 - implementation example ---------------------)
 
-As you can see there are 3 actors. Your web app/site, your server and twitter.  
-Twitter apis for authorization and authentication do not use CORS, that is, they do not emit CORS headers. So we cant send request to twitter directly from browser, but rather proxy them trough a Server, since request sent from server do not have any CORS restrictions applied. Your app is identified with CONSUMER_KEY and CONSUMER_SECRET. Both of which you get from twitter when you [create new app].
+As you can see there are *3* actors. Your web app/site, your server and twitter.  
+Twitter apis for authorization and authentication do not use `CORS`, that is, they do not emit `CORS` headers. So we cant send request to twitter directly from browser, but rather proxy them trough a Server, since request sent from server do not have any CORS restrictions applied. Your app is identified with `CONSUMER_KEY` and `CONSUMER_SECRET`. Both of which you get from twitter when you [create new app](https://apps.twitter.com/).
 
 On Twitter, user is internally associated with the access token.
- Like user's access token , your app's key and secret are extreamly sensitive information. If anyone whould to get your app's key/secret then it can send requests to twitter just like they were sent from your app. It can mock you. Usually that's not what you want. Also, javascript is in plain text form in browser so we should never have our CONSUMER_KEY/SECRET there but on server. This is another good reason why we need a server to proxy our requests. 
+ Like user's access token , your app's key and secret are extreamly sensitive information. If anyone whould to get your app's key/secret then it can send requests to twitter just like they were sent from your app. It can mock you. Usually that's not what you want. Also, javascript is in plain text form in browser so we should never have our `CONSUMER_KEY/SECRET` there but on server. This is another good reason why we need a server to proxy our requests. 
 
 |Likewise if anyone is to get user's access token, then it may be able to send requests on user's behalf (who may actually never visited an app) and/or authorized such actions for that app. Altough, my guess is not in easy and straightforward way. 
 
 	 
-1. You ask your server to get you a request token. Server prepares and signs your request and sends it to twitter. Twitter checks your CONSUMER_KEY and signature (by reproducing it). If all is ok, it grants (returns) you an unauthorized *request_token*. It's function is to be authorized (approved) by user in step 2, so it can be used to get user's *access token* in step 3.
+1. You ask your server to get you a request token. Server prepares and signs your request and sends it to twitter. Twitter checks your `CONSUMER_KEY` and signature (by reproducing it). If all is ok, it grants (returns) you an unauthorized *request_token*. It's function is to be authorized (approved) by user in step 2, so it can be used to get user's *access token* in step 3.
 
 2. Uppon receiving request token data, user is redirected to twitter to obtain user authorization :
-  * if you are using /oauth/authorize enpoint for redirection, then every time user is redirected there it lands on authorization [(interstitials) page](link).
-    Even if user previously authorized your app.
-  * if you are using /oauth/authenticate enpoint for redirection, then only first time user is redirected it lands on authorization page. On any subsequent redirection twitter *remembers* first one and user is directed back again to the app. No authorization page is showed, the user is not involved directly. But historicaly it didn't work for a time, 
- two were actually the same (authorization was just like authorize). READ IT HERE
+  * if you are using /oauth/authorize enpoint for redirection, then every time user is redirected there it lands on authorization [(interstitials) page](https://developer.twitter.com/en/docs/twitter-for-websites/log-in-with-twitter/guides/browser-sign-in-flow.html). Even if user previously authorized your app.
+  
+  * if you are using `/oauth/authenticate` enpoint for redirection, then only first time user is redirected it lands on authorization page. On any subsequent redirection twitter *remembers* first one and user is directed back again to the app. No authorization page is showed, the user is not involved directly. But historicaly it [didn't work](https://twittercommunity.com/t/twitter-app-permission-not-honored-on-subsequent-oauth-authenticate-calls/94440), like it should, for a time, 
+ two were actually the same (authorization was just like authorize).
 
 3. Since user approved your request token, now it is used to get user's access token. Server signs your request and sends it. Twitter does things similarly like in first step and grants you an access token which belongs to the user who authorized it in second step.
 
@@ -37,25 +37,40 @@ Let's see what twiz is doing with OAuth:
 ( -------------- picture Twiz basic ------------------- )
 
 Three differences are:
-| Optimized load |
-* Preparing an OAuth leg (step) mostly refers to the assembling of Signature Base String and Authorization Header string. It is all done in browser (Consumer) in an effort to ease the server load for actions that bear no security concerns and do not need to be executed in server. Already prepared requests come to the server who acts mostly like a signing/stamping authority by merely inserting sensitive data and signing requests.
+ * **Optimized load** 
+ 
+ Preparing an OAuth leg (step) mostly refers to the assembling of Signature Base String and Authorization Header string. It is all done in browser (Consumer) in an effort to ease the server load for actions that bear no security concerns and do not need to be executed in server. Already prepared requests come to the server who acts mostly like a signing/stamping authority by merely inserting sensitive data and signing requests.
 
-* Another important point is that the user's access token is never send back to the browser by any means.
+* **Security**
 
-* | Haste | 
-    On the server we have a decision point where if we already have user's access token (stored from a previous authorization ie. in database) we can use haste (on diagram the *yes* branch ). Haste is a process where you verify access token freshness (verify credentials) with twitter and if it's fresh you can immediately go for a twitter api requests user actually wants. Checking token freshness is checking that user didn't revoke right to your app of doing things on it's behalf and such. This is usefull for scenarios where you save user's access token after first authorization and then just chech for it's freshness before you go for an api request. User do not need to be bothered every time with 3-leg OAuth, there is no interstitials page. With haste you are the one who *remembers* user authorization instead of letting twitter to do it (like it does on the /oauth/authenticate). All in order to have smooth user experience, like for instance in case /oauth/authorize stops working as expected. If this is the first time a user is making a request (and we dont have the access token) then we just continue the whole OAuth flow (on diagram the *no* branch). One of twiz's features is very easy switching between any of your oauth workflows while having a redundant machanism for smooth user experience (haste) as an option.
+Another important point is that the user's access token is never send back to the browser by any means.
+
+* **Haste** 
+
+     On the server we have a decision point where if we already have user's access token (stored from a previous authorization ie. in database) we can use haste (on diagram the *yes* branch ).
+     
+     Haste is a process where you verify access token freshness (verify credentials) with twitter and if it's fresh you can immediately go for a twitter api requests user actually wants. Checking token freshness is checking that user didn't revoke right to your app of doing things on it's behalf and such. 
+     
+     This is usefull for scenarios where you save user's access token after first authorization and then just chech for it's freshness before you go for an api request. User do not need to be bothered every time with 3-leg OAuth, there is no interstitials page. With haste you are the one who *remembers* user authorization instead of letting twitter to do it (like it does on the /oauth/authenticate). All in order to have smooth user experience, like for instance in case /oauth/authorize stops working as expected. 
+     
+     If this is the first time a user is making a request (and we dont have the access token) then we just continue the whole OAuth flow (on diagram the *no* branch). One of twiz's features is very easy switching between any of your oauth workflows while having a redundant machanism for smooth user experience (haste) as an option.
 
 In order to efficiently and safely use twiz make sure you:
-1. Provide https all the way (client ---> server --> twitter),
-2. In browser install twiz-client, on server install twiz-server 
-2. Create app account on twitter
-3. Users (of your app) must have twitter accounts 
+ 1. **Provide HTTPS** all the way (client ---> server --> twitter),
+ 2. In browser install twiz-client, on server install twiz-server 
+ 3. Create [app account](https://apps.twitter.com/app/new) on twitter
+ 4. Users (of your app) must have twitter accounts 
 
 ## Usage 
 
 
-in browser - CDN
-in server  - npm install twiz-server
+in browser: 
+    * CDN - <script src="https://cdn.jsdelivr.net/npm/twiz-client/client/twiz-client.min.js">
+    * bower - comming soon
+	 
+on server:  
+    * npm install twiz-server
+
 ### SPA (singe page apps)
 *browser:*
 ```js  
