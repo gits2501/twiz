@@ -21,7 +21,7 @@ Twiz does authentication and/or authorization to Twitter with OAuth 1.0a, has bu
 Many Twitter apis require user authentication (access token) before usage. OAuth 1.0a is (essencially a digital signature) process of letting know who (which app) wants to use an api and on which user's behalf. In other words you tell Twitter who you are, if twitter is ok with you it lets you to ask an user of your website (with twitter account), on authorization page, if he/she agrees that you act on its behalf (like post tweets on user's profile ect ...)
 
 It happens to be a 3-leg (step) dance, it's implementation could look like this:
-(------------------------- picture 1.0 - implementation example ---------------------)
+           ![OAuthImplementationExample](/Pics/ImplementationExample.png)
 
 As you can see there are 3 actors. Your web app/site, your server and twitter.  
 Twitter apis for authorization and authentication do not use `CORS`, that is, they do not emit `CORS` headers. So we cant send request to twitter directly from browser, but rather proxy them trough a Server, since request sent from server do not have any CORS restrictions applied. Your app is identified with `CONSUMER_KEY` and `CONSUMER_SECRET`. Both of which you get from twitter when you [create new app](https://apps.twitter.com/).
@@ -47,7 +47,7 @@ After we get user's access token the 3-leg OAuth is finished and we can use it t
 We can see that in 3-rd leg access token is send back to web app. Which usually is not good idea, because of security implications it could have, like we mentioned earlier.
  
 Let's see what twiz is doing with OAuth:
-( -------------- picture Twiz basic ------------------- )
+![TwizHaste](/Pics/TwizHaste.png)
 
 Three differences are:
  * **Optimized load** 
