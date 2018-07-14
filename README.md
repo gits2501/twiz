@@ -1,10 +1,10 @@
-twiz
+# twiz
 
 Twitter OAuth wizard.
 
-Twiz does authentication and/or authorization to Twitter with OAuth 1.0a, has built in REST api support and also supports third party STREAM and REST libs.
+Twiz does authentication and/or authorization to Twitter with OAuth 1.0a, has built in `REST` api support and also supports third party STREAM and REST libs.
 
-
+## Intro
 Many Twitter apis require user authentication (access token) before usage. OAuth 1.0a is (essencially a digital signature) process of letting know who (which app) wants to use an api and on which user's behalf. More verbose - you tell Twitter who you are, if twitter is ok with you it lets you to ask an user of your website (with twitter account), on authorization page, if he/she agrees that you act on its behalf (like post tweets on user's profile ect ...)
 
 It happens to be a 3-leg (step) dance, it's implementation could look like this:
@@ -50,19 +50,20 @@ In order to efficiently and safely use twiz make sure you:
 2. In browser install twiz-client, on server install twiz-server 
 2. Create app account on twitter
 3. Users (of your app) must have twitter accounts 
- 
-Basic usage:
+
+## Usage 
+
 
 in browser - CDN
 in server  - npm install twiz-server
-
-
-BROWSER CODE >>>>> [ SPA
+### SPA (singe page apps)
+*browser:*
+```js  
  // Let's say this code is in your page ->  https://myApp.com 
 
-  let twizlent = twizClient();
+let twizlent = twizClient();
   
-btn.addListener('onClick', function(){                 // lets say we initiate oauth on click event
+btn.addListener('onClick', function(){                // lets say we initiate oauth on click event
   let args = {
       server_url:      'https://myServer.com/route', // address of your node server 
       redirection_url: 'https://myApp.com',          // address of your web app/site (where twitter will direct
@@ -75,59 +76,64 @@ btn.addListener('onClick', function(){                 // lets say we initiate o
          }
       }
   }
+
   
   twizlent.OAuth(args)
   .then(function fulfilled(o){
-      if(o.error)              // not 200OK responses (has o.error.status, o.error.statusText, o.error.data)
+      if(o.error)              // not 200OK responses (has o.error.statusCode, o.error.statusText, o.error.data)
       if(o.data)               // (200OK) will have data on succesfull twiz.haste(accessToken) call on server
-      if(o.redirection)        // Will have an o.redirection set to *true* when twiz.continueOAuth() is called on                               // server and user is redirected. Serves as a notifier for redirections.
+      if(o.redirection)        // Will have an o.redirection set to *true* when twiz.continueOAuth() is called on                                     // server and user is redirected. Serves as a notifier for redirections.
       o.xhr                    // Always present in case you need to pull some data from response 
                                // (like custom server headers you might be sending)  
   }, function rejected(err){ // twiz errors
-        // err instance of Error()
-        // has err.name, err.message, err.stack ...
+     // err is instance of Error()
+     // has err.name, err.message, err.stack ...
   })
 
-})
-  
-]
- 
- // finishOAuth() Can be called asap in page 
- // Makes 3-rd step from diagram 
- // We dont need the redirection url for this step, but it will be ignored so we can pass same args
- // It will fire after twitter (re)directs back to app, only on valid redirection (authorization) urls from twitter. 
-  
+})  
 
-  twizlent.finishOAuth(args); 
+// finishOAuth() Can be called asap in page 
+// Makes 3-rd step from diagram 
+// We dont need the redirection url for this step, but it will be ignored so we can pass same args
+// It will fire after twitter (re)directs back to app, only on valid redirection (authorization) urls from twitter. 
+
+twizlent.finishOAuth(args); 
   .then(function fulfilled(o){
       if(o.error) //  not 200OK responses
       if(o.data)  //  (200OK) will have data on succesfull twiz.continueOAuth() call on server
   
-      o.xhr       // always present in case you need to pull some data from response 
+      o.xhr       // Always present in case you need to pull some data from response 
                   // (like custom server headers you might be sending)  
    }, function rejected(err){  // twiz errors
         // err is instance of Error()
         // has err.name, err.message, err.stack ...
-   })                           
->>>>>
-Notice that our redirection_url is same as url of the page from which we are making a request. Making this a SPA use case.
-The only presumtions about a succesfull request is one with 200OK status code, so anything that does not have that status code will still be in fulfilled handler but in o.error, left to your workflow judgement. 
-twizlent.OAuth() will bring api data (o.data) if *twiz.haste(accessToken)* was called on the server and had 200OK response. If not and the twiz.continueOAuth() is called it will receive request token and redirect user to twitter. Then o.redirection is set to true in fullfuled handler. Also note that here everything (redirection to twitter, twitter's (re)direction back to app) happens in same window/tab in browser. Check web site workflow for popUps[link].
+}) 
+```
 
-|Authorize or Authenticate|
+Notice that our redirection_url is same as url of the page from which we are making a request. Making this a SPA use case.
+The only presumtions about a succesfull request is one with 200OK status code, so anything that does not have that status code will still be in fulfilled handler but in o.error, left to your workflow judgement.
+
+twizlent.OAuth() will bring api data (o.data) if *twiz.haste(accessToken)* was called on the server and had 200OK response. If not and the twiz.continueOAuth() is called it will receive request token and redirect user to twitter. 
+
+Then o.redirection is set to true in fullfuled handler. Also note that here everything (redirection to twitter, twitter's (re)direction back to app) happens in same window/tab in browser. Check web site workflow for popUps[link].
+
+### Authorize or Authenticate
 By default twizlent.OAuth(..) will use the /oauth/authorize endpoint , but you can use the /oauth/authenticate like this:
+```js
 let args = {
     ...
       endpoints:{ 
          authorize: 'authenticate' // sets authenticate instead of authorize (notice no forward slash)
       }
  }
+ ```
 
 
 This is the so called [Sign in with Twitter](https://developer.twitter.com/en/docs/twitter-for-websites/log-in-with-twitter/guides/browser-sign-in-flow) flow, the one that uses /oauth/authenticate endpoint. That's how you would utilize it.
 
-Server is writen as express middleware:
-SERVER CODE >>>>>>>>> [
+Server is writen as express middleware.
+*node.js:*
+```js
   var twizServer = require('twiz-server');
   var express    = require('express');
   
@@ -179,29 +185,32 @@ SERVER CODE >>>>>>>>> [
      })
   })
 ]
-
-| Access Token |
+```
+### Access Token
    Currently the minimum of what twiz see as valid access token is an object that has properties *oauth_token* and *oauth_token_secret* set. But it can have other parameters, like *screen_name*.
 The twiz-server (here twizer) is by default an ending middleware, that is it will end the request. So call it before your error handling middlewares, if any. There are cases when twiz does not end the request, check Stream. Errors will be sent to the next error handling midleware with *next(err)* calls and same  errors will also be piped back to the browser.
 
-| Prefligh |
+### Prefligh 
  If your app is not on same domain your browser will preflight request because of CORS. So you need to use some preflight middleware before twiz-server:
-
+```js
  ...
  app.use(yourPreflight);
  app.use(twizer);
-
+```
 Currently you only have to set 'Access-Control-Allow-Origin' to your app's fqdn address. 
  
-| Verify credentials |
+### Verify credentials 
  The credentials object in fulfileld handler can contain a lot of information. In order to ease the memory 
 footprint you can use parameters object (like one with skip_status) to leave out information you don't need. Here [list of params](https://developer.twitter.com/en/docs/accounts-and-users/manage-account-settings/api-reference/get-account-verify_credentials.html) you can use.
  
 ////////////////////////////////////////////////////////////////////////////////////
 
-Web Site
+### Web Site
+
 Web Site workflow is very similar to that of a SPA. You just need to put the new_window object to args to specifiy your new popUp / window characteristics and call twizlent.finishOAuth(..)  from code in that popUp / window . Note that browser doesn't differentiate much between a popUp and a new window (new tab). Main difference is in dimentions.  
-BROWSER CODE >>>>> [ Site
+
+*browser:*
+```js
  // Let's say this code is in your page ->  https://myApp.com 
 
 let twizlent = twizClient();
@@ -240,13 +249,13 @@ btn.addListener('onClick', function(){                  // lets say we initiate 
    })
 
 })
-]
+```
 The redirection_url is now different then the page url then one from which we are making the request. Also we have new_window where we specify the window/popUp features where redirection url will land . Making this more of a website use case.
 The new_window object contains two properties, name and features, they act the same as windowName and windowFeatures in [window.open()](https://developer.mozilla.org/en-US/docs/Web/API/Window/open). Note o.window reference to newly opened window / popUp instead of o.redirection. 
 
->>>>>>>>>> [ code in https://myApp.com/popUpWindow
-   
-
+*browser(different page):*
+```js
+ // code in https://myApp.com/popUpWindow
   twizlent.finishOAuth(args);  // Also can be called asap in page
   .then(function fulfilled(o){
       if(o.error)              //  not 200OK responses
@@ -259,21 +268,25 @@ The new_window object contains two properties, name and features, they act the s
         // has err.name, err.message, err.stack ...
    })
 ]
-
+```
 What this enables is to have completely custom popUp pages but same familiar popUp like for instance when you whould like to share something on twitter by pressing a twitter share button. Currently the downside is that users of the web site use case will get a popUp warning by browser which they have to allow before popUp apears.
 Test drive [here]
                              /////         ADDITIONAL USAGE        /////////
-server code is the same
-
-| getSessionData |
+*node.js:*
+```js 
+  // Same code as in SPA use case;
+```
+### getSessionData 
 
 There is an interesting capability provided by the OAuth 1.0a spec section 6.2.3. "The callback URL MAY include Consumer provided query parameters. The Service Provider MUST retain them unmodified and append the OAuth parameters to the existing query".
  This relates to OAuth step 2. When we redirect user to twitter for obtaining authorization we are *sending* a callback url (I've called it redirection_url) along with request token (not shown in diagrams), which twitter uses to (re)direct user back to app when authorization is done. In that url we can piggy back arbitrary data as query params (to twitter and back to app). Then, when we are (re)directed back to app, we can take back that data. The result is that we have a simple mechanism that allows our data to survive redirections, that is changing window contexts in browser. Which is handy in cases when we have the SPA workflow and everthing happens in one window tab, so data we send from our app's window context can *survive* changing that context to the context of twitter's window on which oauthorization happens and then again finally our apps' window context.
 
  This can also be used for web site workflows, but you'le get the *o.window* reference in that case which also can be used for exact same thing. This mechanism comes in hand when you are in a place like github pages and don't have access to a database there and/or your are not currently interested in puting a database solution on a server. Here is how you can use it.
 
-Browser >>>>>> [ Spa
-    //  code in https://myApp.com
+#### SPA
+*browser:*
+```js
+ //  code in https://myApp.com
   let twizlent = twizClient();
   
   btn.addListener('onClick', function(){                  // lets say we initiate oauth on click event
@@ -301,8 +314,9 @@ Browser >>>>>> [ Spa
      }
   }
 
-]
- Browser >>>>>>>> [
+```
+ *browser(different page):*
+ ```js
   // https://myApp.com/popUpWindow
   let twizlent = twizClient();
 
@@ -310,7 +324,7 @@ Browser >>>>>> [ Spa
                                                  // Can also be called asap in page 
   ...     
 ]
-
+```
 | onEnd |
 
  There is a second argument that is passed to your 'tokenFound' handler. The onEnd(..) function.
