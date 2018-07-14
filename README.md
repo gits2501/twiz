@@ -1,5 +1,10 @@
 # twiz (work in progress)
 
+### Contents
+* Intro
+* [Usage](/)
+  *
+
 Twitter OAuth wizard.
 
 Twiz does authentication and/or authorization to Twitter with OAuth 1.0a, has built in `REST` api support and also supports third party `STREAM` and `REST` libs.
@@ -10,7 +15,7 @@ Many Twitter apis require user authentication (access token) before usage. OAuth
 It happens to be a 3-leg (step) dance, it's implementation could look like this:
 (------------------------- picture 1.0 - implementation example ---------------------)
 
-As you can see there are *3* actors. Your web app/site, your server and twitter.  
+As you can see there are 3 actors. Your web app/site, your server and twitter.  
 Twitter apis for authorization and authentication do not use `CORS`, that is, they do not emit `CORS` headers. So we cant send request to twitter directly from browser, but rather proxy them trough a Server, since request sent from server do not have any CORS restrictions applied. Your app is identified with `CONSUMER_KEY` and `CONSUMER_SECRET`. Both of which you get from twitter when you [create new app](https://apps.twitter.com/).
 
 On Twitter, user is internally associated with the access token.
@@ -24,8 +29,8 @@ On Twitter, user is internally associated with the access token.
 2. Uppon receiving request token data, user is redirected to twitter to obtain user authorization :
   * if you are using /oauth/authorize enpoint for redirection, then every time user is redirected there it lands on authorization [(interstitials) page](https://developer.twitter.com/en/docs/twitter-for-websites/log-in-with-twitter/guides/browser-sign-in-flow.html). Even if user previously authorized your app.
   
-  * if you are using `/oauth/authenticate` enpoint for redirection, then only first time user is redirected it lands on authorization page. On any subsequent redirection twitter *remembers* first one and user is directed back again to the app. No authorization page is showed, the user is not involved directly. But historicaly it [didn't work](https://twittercommunity.com/t/twitter-app-permission-not-honored-on-subsequent-oauth-authenticate-calls/94440), like it should, for a time, 
- two were actually the same (authorization was just like authorize).
+  * if you are using `/oauth/authenticate` enpoint for redirection, then only first time user is redirected it lands on authorization page. On any subsequent redirection twitter *remembers* first one and user is directed back again to the app. No authorization page is showed, the user is not involved directly. But historicaly it [didn't work](https://twittercommunity.com/t/twitter-app-permission-not-honored-on-subsequent-oauth-authenticate-calls/94440) like it should, for a time. 
+ Two were actually the same. 
 
 3. Since user approved your request token, now it is used to get user's access token. Server signs your request and sends it. Twitter does things similarly like in first step and grants you an access token which belongs to the user who authorized it in second step.
 
@@ -39,11 +44,11 @@ Let's see what twiz is doing with OAuth:
 Three differences are:
  * **Optimized load** 
  
- Preparing an OAuth leg (step) mostly refers to the assembling of Signature Base String and Authorization Header string. It is all done in browser (Consumer) in an effort to ease the server load for actions that bear no security concerns and do not need to be executed in server. Already prepared requests come to the server who acts mostly like a signing/stamping authority by merely inserting sensitive data and signing requests.
+     Preparing an OAuth leg (step) mostly refers to the assembling of Signature Base String and Authorization Header string. It is all done in browser (Consumer) in an effort to ease the server load for actions that bear no security concerns and do not need to be executed in server. Already prepared requests come to the server who acts mostly like a signing/stamping authority by merely inserting sensitive data and signing requests.
 
 * **Security**
 
-Another important point is that the user's access token is never send back to the browser by any means.
+    Another important point is that the user's access token is never send back to the browser by any means.
 
 * **Haste** 
 
@@ -65,7 +70,7 @@ In order to efficiently and safely use twiz make sure you:
 
 
 in browser: 
-    * CDN - <script src="https://cdn.jsdelivr.net/npm/twiz-client/client/twiz-client.min.js">
+    * CDN - <script src="link here"></script>
     * bower - comming soon
 	 
 on server:  
@@ -340,7 +345,7 @@ There is an interesting capability provided by the OAuth 1.0a spec section 6.2.3
   ...     
 ]
 ```
-| onEnd |
+## onEnd 
 
  There is a second argument that is passed to your 'tokenFound' handler. The onEnd(..) function.
 It's use is to specify your function that will end the request as you see fit. For instance when you would like to use a template engine. onEnd(..) fires afther access protected resources (api) call but it does not end the response.
