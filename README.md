@@ -75,15 +75,16 @@ btn.addListener('onClick', function(){                 // lets say we initiate o
          }
       }
   }
+}) 
   
-  twizlent.OAuth(args)
-  .then(function fulfilled(o){
-      if(o.error)              // not 200OK responses (has o.error.status, o.error.statusText, o.error.data)
-      if(o.data)               // (200OK) will have data on succesfull twiz.haste(accessToken) call on server
-      if(o.redirection)        // Will have an o.redirection set to *true* when twiz.continueOAuth() is called on                               // server and user is redirected. Serves as a notifier for redirections.
+twizlent.OAuth(args)
+.then(function fulfilled(o){
+    if(o.error)              // not 200OK responses (has o.error.status, o.error.statusText, o.error.data)
+    if(o.data)               // (200OK) will have data on succesfull twiz.haste(accessToken) call on server
+    if(o.redirection)        // Will have an o.redirection set to *true* when twiz.continueOAuth() is called on                               // server and user is redirected. Serves as a notifier for redirections.
       o.xhr                    // Always present in case you need to pull some data from response 
                                // (like custom server headers you might be sending)  
-  }, function rejected(err){ // twiz errors
+ }, function rejected(err){ // twiz errors
         // err instance of Error()
         // has err.name, err.message, err.stack ...
   })
