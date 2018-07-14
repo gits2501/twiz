@@ -47,7 +47,7 @@ There is an interesting capability provided by the OAuth 1.0a spec section 6.2.3
                                                  // Can also be called asap in page 
   ...     
 ```
-If there is no session data in url function return undefind and log worning on console `noSessionData: 'Unable to find session data in current url'`
+If there is no session data in url, function returns `undefined` and logs warning on console `noSessionData: 'Unable to find session data in current url'`
 
 ## onEnd 
 
