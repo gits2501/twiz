@@ -4,7 +4,7 @@
 There is an interesting capability provided by the OAuth 1.0a spec section 6.2.3. "The callback URL MAY include Consumer provided query parameters. The Service Provider MUST retain them unmodified and append the OAuth parameters to the existing query".
  This relates to OAuth step 2. When we redirect user to twitter for obtaining authorization we are *sending* a callback url (I've called it redirection_url) along with request token (not shown in diagrams), which twitter uses to (re)direct user back to app when authorization is done. In that url we can piggy back arbitrary data as query params (to twitter and back to app). Then, when we are (re)directed back to app, we can take back that data. The result is that we have a simple mechanism that allows our data to survive redirections, that is changing window contexts in browser. Which is handy in cases when we have the SPA workflow and everthing happens in one window tab, so data we send from our app's window context can *survive* changing that context to the context of twitter's window on which oauthorization happens and then again finally our apps' window context.
 
- This can also be used for web site workflows, but you'le get the *o.window* reference in that case which also can be used for exact same thing. This mechanism comes in hand when you are in a place like github pages and don't have access to a database there and/or your are not currently interested in puting a database solution on a server. Here is how you can use it.
+ This can also be used for web site workflows, but you'le get the *o.window* reference in that case which also can be used for exact same thing. This mechanism comes in hand when you are in a place like github pages and don't have access to a database there and/or your are not currently interested in puting a database solution on a server. Here is how you can use it:
 
 ### SPA
 *browser:*
@@ -46,8 +46,9 @@ There is an interesting capability provided by the OAuth 1.0a spec section 6.2.3
   let sessionData = twizlent.getSessionData();   // Gets our session_data from re(direction) url 
                                                  // Can also be called asap in page 
   ...     
-]
 ```
+If there is no session data in url function return undefind and log worning on console `noSessionData: 'Unable to find session data in current url'`
+
 ## onEnd 
 
  There is a second argument that is passed to your 'tokenFound' handler. The onEnd(..) function.
