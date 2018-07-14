@@ -309,25 +309,41 @@ Test drive [here]
 Additio
 
 ## Errors
-| Errors | twizlent.OAuth(..) 'rejected()' handler: <error.name> <error.message>
+`twizlent.OAuth(..)` `rejected(..)` handler:
 
-redirectionUrlNotSet: "You must provide a redirection_url to which users will be redirected.", serverUrlNotSet: "You must proivide server_url to which request will be sent", optionNotSet: "Check that 'method' and 'path' are set."
+error.name  |  error.message
+----------- | --------------
 
-noCallbackFunc: 'You must specify a callback function', callbackURLnotConfirmed: "Redirection(callback) url you specified wasn't confirmed by Twitter" noContentType: "Failed to get content-type header from response. Possible CORS restrictions or header is missing." chunkedResponseWarning: 'Stream is consumed chunk by chunk in xhr.onprogress(..) callback
+redirectionUrlNotSet | You must provide a `redirection_url` to which users will be redirected.
+serverUrlNotSet | You must proivide `server_url` to which request will be sent.
+optionNotSet | Check that `method` and `path` are set.
+noCallbackFunc | You must specify a callback function. 
+callbackURLnotConfirmed | `Redirection(callback) url` you specified wasn't confirmed by Twitter. 
+noContentType | Failed to get `content-type` header from response. Possible `CORS` restrictions or header is missing. chunkedResponseWarning | Stream is consumed chunk by chunk in `xhr.onprogress(..)` callback.
 
-twizlent.finishOAuth(..) 'rejected' handler:
+`twizlent.finishOAuth(..)` `rejected(..)` handler:
 
-verifierNotFound: '"oauth_verifier" string was not found in redirection(callback) url.', tokenNotFound: '"oauth_token" string was not found in redirection(callback) url.',
+error.name  |  error.message
+----------- | --------------
+verifierNotFound | `"oauth_verifier"` string was not found in `redirection(callback) url`.
+tokenNotFound | `"oauth_token"` string was not found in `redirection(callback) url`.
+tokenMissmatch | `Request token` and token from `redirection(callback) url` do not match.
+requestTokenNotSet | `Request token` was not set.
+requestTokenNotSaved: `Request token` was not saved. Check that page url from which you make request match your redirection_url.
+chunkedResponseWarning | Stream is consumed chunk by chunk in `xhr.onprogress(..)` callback. 
+noRepeat | Cannot make another request with same `redirection(callback)` url. 
+spaWarning | Twitter authorization data not found in url.
 
-tokenMissmatch: 'Request token and token from redirection(callback) url do not match', This error can happen if user
+`spaWarning` and `noRepeat` are errors that have informative character and usually you dont have to pay attention to them. They happen when user loads/relods page where `twizlent.finishOAuth(..)` is called on every load, imediately (which is valid). They are indications that `twizlent.finishOAuth(..)` will not run. For example, `spaWarning` means `twizlent.finishOAuth(..)` won't run on url that doesn't contain valid twitter authorization data. `noRepeat` means that you cannot make two requests with same twitter authorization data (like same `request token`). Check the [Stream](link) for explanation of `chunkedResponseWarning`
 
-requestTokenNotSet: 'Request token was not set', requestTokenNotSaved: 'Request token was not saved. Check that page url from which you make request match your redirection_url.', chunkedResponseWarning: 'Stream is consumed chunk by chunk in xhr.onprogress(..) callback noRepeat: "Cannot make another request with same redirection(callback) url", // urlNotFound: "Current window location (url) not found", // as console warn in SessionData = noSessionData: 'Unable to find session data in current url', spaWarning: 'Twitter authorization data not found in url'.
+`twiz.continueOAuth(..)` errors are ones that can happen on `request` or `response` streams (low level) and they are hanled by calling `next(..)`. There are no twiz errors currently for this function. Not `200OK` responses are only piped back to client and are not considered as errors.
 
-'spaWarning' and 'noRepeat' are errors that have informative character and usually you dont have to pay attention to them. They happen when user loads/relods page where twizlent.finishOAuth(..) is called on every load, imediately (which is valid). They are indication that twizlent.finishOAuth(..) will not run. For example, 'spaWarning' means finishOAuth() won't run on url that doesn't contain valid twitter authorization data. 'noRepeat' means that you cannot make two requests with same twitter authorization data (like same request token).
-twiz.continueOAuth() Errors are ones that can happen on request or response streams (low level) and they are hanled by calling next(..). There are no twiz errors currently for this function. Not 200OK responses are only piped back to client and are not considered as errors.
+`twiz.haste(..)` errors work same as `twizlent.continueOAuth(..)`
 
-twiz.haste() errors work same as continueOAuth()
+`verifyCredentials()` any **not** `200OK` response are considered as an `accessTokenNotVerified` error. Express' `next(..)` is called and promise is rejected with the same error. 
 
-verifyCredentials() any not 200OK response are considered as an 'accessTokenNotVerified' error. Express' next(..) is called and promise is rejected with the same error. <error.name> <error.message> 'accessTokenNotVerified': '';
+ error.name | error.message
+ ---------  |  -------------
+accessTokenNotVerified | json string
 
-Note that the error.message will be a json string taken from response payload so you can have exact twitter error description, error code etc ...
+Note that the `error.message` will be a json string taken from `response` payload so you can have exact twitter error description, error code etc ...
