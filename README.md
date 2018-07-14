@@ -313,7 +313,6 @@ Additio
 
 error.name  |  error.message
 ----------- | --------------
-
 redirectionUrlNotSet | You must provide a `redirection_url` to which users will be redirected.
 serverUrlNotSet | You must proivide `server_url` to which request will be sent.
 optionNotSet | Check that `method` and `path` are set.
@@ -329,7 +328,7 @@ verifierNotFound | `"oauth_verifier"` string was not found in `redirection(callb
 tokenNotFound | `"oauth_token"` string was not found in `redirection(callback) url`.
 tokenMissmatch | `Request token` and token from `redirection(callback) url` do not match.
 requestTokenNotSet | `Request token` was not set.
-requestTokenNotSaved: `Request token` was not saved. Check that page url from which you make request match your redirection_url.
+requestTokenNotSaved | `Request token` was not saved. Check that page url from which you make request match your redirection_url.
 chunkedResponseWarning | Stream is consumed chunk by chunk in `xhr.onprogress(..)` callback. 
 noRepeat | Cannot make another request with same `redirection(callback)` url. 
 spaWarning | Twitter authorization data not found in url.
@@ -344,6 +343,6 @@ spaWarning | Twitter authorization data not found in url.
 
  error.name | error.message
  ---------  |  -------------
-accessTokenNotVerified | json string
+accessTokenNotVerified | `json string`
 
-Note that the `error.message` will be a json string taken from `response` payload so you can have exact twitter error description, error code etc ...
+Note that the `error.message` will be a `json string` taken from `response` payload so you can have exact twitter error description, error code etc ...
