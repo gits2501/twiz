@@ -2,7 +2,7 @@
 
 ### Contents
 * Intro
-* [Usage](/)
+* [Usage](https://github.com/gits2501/twiz/blob/master/README.md#usage)
   *
 
 Twitter OAuth wizard.
