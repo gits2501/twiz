@@ -117,6 +117,7 @@ On client side the args.options object can alse have a 'beforeSend' property. It
 The args object can have the 'callback' property. You can specify there your callback function which will run **only** if
 
 1. **Promise is not avalable**
+
 If there is `Promise`, function always returns promise.
 
 ```js
@@ -275,7 +276,8 @@ A reference[link] on how to consume chunks.
 
    When your stream is consumed in onprogress() and it ends the promise will still resolve and you will have all your data that stream emmited in o.data. Since your getting your data in onprogress(..) you might not want to receive it in your promise too. Same goes if your using callbacks and not promises. To stop all data from stream to resolve in promise set 'chunked=true' in args.options.
 
-*browser:*  
+*browser:* 
+```js
  let args = {
     ...
     options = {
@@ -283,6 +285,5 @@ A reference[link] on how to consume chunks.
        chunked: true
     }
  }
-  
-```
+ ```
 By setting `chunked` you dont have to worry about sending `content-type`, it will make the promise reject with error `chunkedResponseWarning` no matter the presents of `content-type header`. So you have consistent behavior, when you would want to consume chunks only in `xhr.onprogress(..)` handler.   
