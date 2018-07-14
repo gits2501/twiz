@@ -1,7 +1,9 @@
 # twiz (work in progress)
 
+Twitter OAuth wizard.
+
 ### Contents
-* Intro
+* [Intro](https://github.com/gits2501/twiz/blob/master/README.md#intro)
 * [Usage](https://github.com/gits2501/twiz/blob/master/README.md#usage)
   * [SPA](https://github.com/gits2501/twiz/blob/master/README.md#spa-singe-page-apps)
     * [Authorize or Authenticate](https://github.com/gits2501/twiz/blob/master/README.md#authorize-or-authenticate)
@@ -11,7 +13,7 @@
 * [Advanced]()  
    
 
-Twitter OAuth wizard.
+
 
 Twiz does authentication and/or authorization to Twitter with OAuth 1.0a, has built in `REST` api support and also supports third party `STREAM` and `REST` libs.
 
