@@ -8,7 +8,7 @@ There is an interesting capability provided by the [OAuth 1.0a](https://oauth.ne
  This can also be used for web site workflows, but you'le get the `o.window` reference in that case which also can be used for exact same thing. This mechanism comes in hand when you are in a place like [github pages](https://pages.github.com/) and don't have access to a database there and/or your are not currently interested in puting a database solution on a server. Here is how you can use it:
 
 ### SPA
-*browser:*
+_**browser:**_
 ```js
  //  code in https://myApp.com
   let twizlent = twizClient();
@@ -39,7 +39,7 @@ There is an interesting capability provided by the [OAuth 1.0a](https://oauth.ne
   }
 
 ```
- *browser(different page):*
+ _**browser(different page):**_
  ```js
   // https://myApp.com/popUpWindow
   let twizlent = twizClient();
@@ -55,7 +55,7 @@ If there is no `session data` in url, function returns `undefined` and logs warn
  There is a second argument that is passed to your `tokenFound` handler. The `onEnd(..)` function.
 It's use is to specify your function that will end the request as you see fit. For instance when you would like to use a template engine. `onEnd(..)` fires afther `access protected resources` (api) call but it does not end the response.
 
-*node.js:*
+_**node.js:**_
 ```js
   app.on('tokenFound', function(found, onEnd){
 
@@ -88,7 +88,7 @@ Then the `twizlent.finishOAuth(..)` will get this `signedInUI` template in it's 
 
 On client side the `args.options` object can alse have a `beforeSend` property. It is a function that allows your to manipulate `xhr` instance before request is sent.
 
-*browser:*
+_**browser:**_
 ```js   
 // https://myApp.com
   btn.addListener('onClick', function(){                  // lets say we initiate oauth on click event
@@ -115,12 +115,12 @@ On client side the `args.options` object can alse have a `beforeSend` property. 
 
 
 ## Callback 
-The `args` object can have the `callback` property. You can specify there your callback function which will run **only** if:`
+The `args` object can have the `callback` property. You can specify there your callback function which will run **only** if:
 
 1. **Promise is not avalable**
 
 If there is `Promise`, `OAuth(..)` and `finishOAuth(..)` functions always return promise.
-
+_**browser:**_
 ```js
 args = {
    ...
@@ -145,14 +145,14 @@ catch(err){
 }
 ```
 
-If promise is not available and there is no `callback` specified you'le get and error `noCallbackFunc` see errors[link]
+If promise is not available and there is no `callback` specified you'le get and error `noCallbackFunc` see [errors](https://github.com/gits2501/twiz#twizlentoauth-rejected-handler)
 
 ## Stream 
 
-With twiz using stream means using third party `STREAM` and/or `REST` libraries, while letting twiz to take care only for user authentication, that is getting an access token. In other words stream efectively turns off built in REST capability.
-Specify stream in client by passing 'args.stream = true'. 
+With twiz using stream means using third party `STREAM` and/or `REST` libraries, while letting twiz to take care **only** for user `authentication`, that is getting an `access token`. In other words stream efectively turns off built in `REST` capability.
+Specify stream in client by passing `args.stream = true`. 
 
-*browser:*
+_**browser:**_
 ```js
   ...
   let twizlent = twizClient();
@@ -184,7 +184,7 @@ Specify stream in client by passing 'args.stream = true'.
 ```
 Then on server you can do the following:
 
-*node.js:*
+_**node.js:**_
 ```js
    app.use(twizer)                                           // instance of twiz-server
 
@@ -235,10 +235,12 @@ Then on server you can do the following:
    })
 ```
 
-Instead of baking in something like onStream(..) function that would handle your own 'stream/rest'requests, in 'hasteOrOAuth' and 'tokenFound' events you are given 3 basic building blocks for creating such 'onStream' handler. With the exception of accessToken that you've got already, they are:
-  twiz.stream         // flag that indicates request wants third party stream/rest capability
-  twiz.twitterOptions // your args.options from browser, has 'path', 'method' and 'params' properties
-  twiz.next           // reference to Express' next() function which runs next middleware (myStream in example)
+Instead of baking in something like `onStream(..)` function that would handle your own `stream/rest` requests, in `hasteOrOAuth` and `tokenFound` events you are given 3 basic building blocks for creating such `onStream(..)` handler. With the exception of `access token` that you've got already, they are:
+property | description
+-------- | ----------- 
+twiz.stream | Flag that indicates request wants third party stream/rest capability
+twiz.twitterOptions | Your args.options from browser, has 'path', 'method' and 'params' properties
+twiz.next | Reference to Express' next() function which runs next middleware (myStream in example)
 
 So you can easily see something like onStream handler that:
  
@@ -252,7 +254,7 @@ As you can see, twiz is not keen to stuff potentialy security sensitive data to 
 ## Chunked responses 
 When making stream requests the response often come as series of data chunks[link] from other end. To consume response in chunk by chunk manner set xhr.onprogress(..)[link] callback in beforeSend function:
 
-*browser:*
+_**browser:**_
  ```js
  let args = {
       ...
@@ -277,7 +279,7 @@ A reference[link] on how to consume chunks.
 
    When your stream is consumed in onprogress() and it ends the promise will still resolve and you will have all your data that stream emmited in o.data. Since your getting your data in onprogress(..) you might not want to receive it in your promise too. Same goes if your using callbacks and not promises. To stop all data from stream to resolve in promise set 'chunked=true' in args.options.
 
-*browser:* 
+_**browser:**_
 ```js
  let args = {
     ...
