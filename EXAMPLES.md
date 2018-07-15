@@ -117,7 +117,7 @@ _**browser:**_
 ## Callback 
 The `args` object can have the `callback` property. You can specify there your callback function which will run **only** if:
 
-1. **Promise is not avalable**
+1. **Promise is not avalable** 
 
 If there is `Promise`, `OAuth(..)` and `finishOAuth(..)` functions always return promise.
 _**browser:**_
