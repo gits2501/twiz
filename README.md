@@ -53,7 +53,7 @@ Twitter apis for authorization and authentication do not use `CORS`, that is, th
   * if you are using `/oauth/authenticate` enpoint for redirection, then only first time user is redirected it lands on authorization page. On any subsequent redirection twitter *remembers* first one and user is directed back again to the app. No authorization page is showed, the user is not involved directly. Historicaly it [didn't work](https://twittercommunity.com/t/twitter-app-permission-not-honored-on-subsequent-oauth-authenticate-calls/94440) like it should, for a time. 
  Two were actually the same where `/oauth/authenticate` acted like `/oauth/authorize`. 
  
- > Even there is no authorization page showed, there still can be a redirection page flash.
+    > Even there is no authorization page showed, there still can be a redirection page flash.
 
 3. Since user approved your `request token`, now it is used to get user's `access token`. Server signs your request and sends it. Twitter does things similarly like in first step and grants you an `access token` which belongs to the user who authorized it in second step.
 
