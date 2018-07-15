@@ -9,7 +9,7 @@ Twitter OAuth wizard.
     * [Authorize or Authenticate](https://github.com/gits2501/twiz/blob/master/README.md#authorize-or-authenticate)
     * [Access Token](https://github.com/gits2501/twiz/blob/master/README.md#access-token)
     * [Verify Credentials](https://github.com/gits2501/twiz/blob/master/README.md#verify-credentials)
-  * [Web Site](https://github.com/gits2501/twiz/blob/master/README.md#web-site)  
+  * [Web Site (pop-ups)](https://github.com/gits2501/twiz/blob/master/README.md#web-site)  
 * [Additional use](https://github.com/gits2501/twiz/blob/master/EXAMPLES.md)
   * [Stream](https://github.com/gits2501/twiz/blob/master/EXAMPLES.md#stream)
   * [Chunked responses](https://github.com/gits2501/twiz/blob/master/EXAMPLES.md#chunked-responses)
