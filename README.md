@@ -13,7 +13,7 @@ Twiz does authentication and/or authorization to Twitter with [OAuth 1.0a](https
     * [Access Token](#access-token)
     * [Verify Credentials](#verify-credentials)
   * [Web Site (pop-ups)](#web-site)  
-* [Additional use](https://github.com/gits2501/twiz/blob/master/EXAMPLES.md)
+* [Additional use](/EXAMPLES.md)
   * [Stream](/EXAMPLES.md#stream)
   * [Chunked responses](/EXAMPLES.md#chunked-responses)
   * [getSessionData](/EXAMPLES.md#getsessiondata)
