@@ -1,157 +1,13 @@
+# Additional use
+Check [usage](https://github.com/gits2501/twiz#usage) before continuing (recomended).
 
-## getSessionData 
-
-There is an interesting capability provided by the [OAuth 1.0a](https://oauth.net/core/1.0a/) spec section `6.2.3`. "The callback URL `MAY` include Consumer provided query parameters. The Service Provider `MUST` retain them unmodified and append the `OAuth` parameters to the existing query".
-
- This relates to `OAuth` step 2. When we redirect user to twitter for obtaining `authorization` we are *sending* a `callback url` (I've called it `redirection_url`) along with `request token` (not shown in diagrams), which twitter uses to (re)direct user back to app when authorization is done. In that url we can piggy-back arbitrary data as query params, to twitter and back to app. Then, when we are (re)directed back to app, we can take back that data. The result is that we have a simple mechanism that allows our data to survive redirections, that is changing window contexts in browser. Which is handy in cases when we have the `SPA` workflow and everthing happens in one window tab, so data we send from our app's window context can *survive* changing that context to the context of twitter's window on which `authorization` happens and then again finally our apps' window context.
-
- This can also be used for web site workflows, but you'le get the `o.window` reference in that case which also can be used for exact same thing. This mechanism comes in hand when you are in a place like [github pages](https://pages.github.com/) and don't have access to a database there and/or your are not currently interested in puting a database solution on a server. Here is how you can use it:
-
-### SPA
-_**browser:**_
-```js
- //  code in https://myApp.com
-  let twizlent = twizClient();
-  
-  btn.addListener('onClick', function(){                  // lets say we initiate oauth on click event
-     let args = {
-        server_url:      'https://myServer.com/route',    // address of your node server where twiz-server runs
-        redirection_url: 'https://myApp.com/popUpWindow', // address of your popUp/window page
-         
-        session_data: {                                  // our  arbitrary session data we want 
-           weater: 'Dry, partly cloudy with breeze.',
-           background_noise: 'cicada low frequency',
-           intentions: 'lawfull good'
-        }                                            
-        new_window:{
-           name: 'myPopUpWindow',
-           features: 'resizable=yes,height=613,width=400,left=400,top=300'
-        },
-
-        options:{                                         //  twitter request options  
-           method: 'POST',
-           path:   'statuses/update.json'
-           params: {
-             status: "Hooray, new tweet!"
-           }
-       }
-     }
-  }
-
-```
- _**browser(different page):**_
- ```js
-  // https://myApp.com/popUpWindow
-  let twizlent = twizClient();
-
-  let sessionData = twizlent.getSessionData();   // Gets our session_data from re(direction) url 
-                                                 // Can also be called asap in page 
- 
- sessionData // {                                    // data we sent              
-           weater: 'Dry, partly cloudy with breeze.',
-           background_noise: 'cicada low frequency',
-           intentions: 'lawfull good'
-        }                                                                   
-  ...     
-```
-If there is no `session data` in url, function returns `undefined` and logs warning on console `noSessionData: 'Unable to find session data in current url'`
-
-## onEnd 
-
- There is a second argument that is passed to your `tokenFound` handler. The `onEnd(..)` function.
-It's use is to specify your function that will end the request as you see fit. For instance when you would like to use a template engine. `onEnd(..)` fires afther `access protected resources` (api) call but it does not end the response.
-
-_**node.js:**_
-```js
-  app.on('tokenFound', function(found, onEnd){
-
-     found                        
-     .then(function(accessToken){
-         // user's access token received from twitter which you can put in database
-         
-     }, function rejected(err){   // twiz errors
-
-     })
-
-     onEnd(function(apiData, res){ // happens after accessToken is found
-         res.render('signedInUI', { user: apiData.user.name })   // Uses server side template engine
-                                                                // Ends response internally
-     })
-  })
-```
-
-When we get the `access token` in our promise then twiz gets api data and calls your `onEnd(..)` callback with that data and response stream.
-So we've sent the rendered html with `user.name` from data we got from  twitter's `statuses/update.json`
-api. When you are specifying the `onEnd(..)` function then it must end the response or else the request will hang. 
-
-Also if your workflow requires front-end template rendering. You can instead of `res.render(..)` use :
-```js
-res.redirect(302,'/signedInUI');  // redirects the client to the signedInUI template
-```
-Then the `twizlent.finishOAuth(..)` will get this `signedInUI` template in it's `o.data`.
-
-## beforeSend 
-
-On client side the `args.options` object can alse have a `beforeSend` property. It is a function that allows your to manipulate `xhr` instance before request is sent.
-
-_**browser:**_
-```js   
-// https://myApp.com
-  btn.addListener('onClick', function(){                  // lets say we initiate oauth on click event
-     let args = {
-        ...
-        ...
-        options:{                                         //  twitter request options  
-           method: 'POST',
-           path:   'statuses/update.json'
-           params: {
-             status: "Hooray, new tweet!"
-           },
-           beforeSend: function(xhr){
-              // xhr.open(..) is called for you, dont do it
-       
-                 xhr.setRequestHeader('X-My-Header-Name', 'yValue') // in case you whould ever need something like this
-
-              // xhr.send(..) is called for you, dont do it
-           }
-       }
-     } 
-
-```
-
-
-## Callback 
-The `args` object can have the `callback` property. You can specify there your callback function which will run **only** if:
-
-1. **Promise is not avalable** 
-
-If there is `Promise`, `OAuth(..)` and `finishOAuth(..)` functions always return promise.
-_**browser:**_
-```js
-args = {
-   ...
-   ...
-   callback: function(o){
-         if(o.error)
-         if(o.data)
-         if(o.window) // or if(o.rederection). When using SPA workflow (o.window), 
-                      // when using web site (o.redirection)  
-
-         o.xhr        // always present in case you need to pull some data from response (like custom headers)      
-   }
-   
-}
-
-try{
-   let twizlent = twizClient();
-   twizlent.OAuth(args)
-}
-catch(err){
-   // twiz errors
-}
-```
-
-If promise is not available and there is no `callback` specified you'le get and error `noCallbackFunc` see [errors](https://github.com/gits2501/twiz#twizlentoauth-rejected-handler)
+### Contents
+  * [Stream](#stream)
+  * [Chunked responses](#chunked-responses)
+  * [getSessionData](#getsessiondata)
+  * [onEnd](#onend)
+  * [beforeSend](#beforesend)
+  * [callback](#callback)
 
 ## Stream 
 
@@ -259,6 +115,8 @@ As you can see, twiz is not keen to stuff potentialy security sensitive data to 
 
 
 ## Chunked responses 
+### [⬑](#contents)
+
 When making stream requests the response often come as series of data [chunks](https://en.wikipedia.org/wiki/Chunked_transfer_encoding) from other end. To consume response in chunk by chunk manner set [xhr.onprogress(..)](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequestEventTarget/onprogress) callback in `beforeSend` function:
 
 _**browser:**_
@@ -296,4 +154,163 @@ _**browser:**_
     }
  }
  ```
-By setting `chunked` you dont have to worry about sending `content-type`, it will make the promise reject with error `chunkedResponseWarning` no matter the presents of `content-type header`. So you have consistent behavior, when you would want to consume chunks only in `xhr.onprogress(..)` handler.   
+By setting `chunked` you dont have to worry about sending `content-type`, it will make the promise reject with error `chunkedResponseWarning` no matter the presents of `content-type header`. So you have consistent behavior, when you would want to consume chunks only in `xhr.onprogress(..)` handler. 
+
+## getSessionData 
+### [⬑](#contents)
+
+There is an interesting capability provided by the [OAuth 1.0a](https://oauth.net/core/1.0a/) spec section `6.2.3`. "The callback URL `MAY` include Consumer provided query parameters. The Service Provider `MUST` retain them unmodified and append the `OAuth` parameters to the existing query".
+
+ This relates to `OAuth` step 2. When we redirect user to twitter for obtaining `authorization` we are *sending* a `callback url` (I've called it `redirection_url`) along with `request token` (not shown in diagrams), which twitter uses to (re)direct user back to app when authorization is done. In that url we can piggy-back arbitrary data as query params, to twitter and back to app. Then, when we are (re)directed back to app, we can take back that data. The result is that we have a simple mechanism that allows our data to survive redirections, that is changing window contexts in browser. Which is handy in cases when we have the `SPA` workflow and everthing happens in one window tab, so data we send from our app's window context can *survive* changing that context to the context of twitter's window on which `authorization` happens and then again finally our apps' window context.
+
+ This can also be used for web site workflows, but you'le get the `o.window` reference in that case which also can be used for exact same thing. This mechanism comes in hand when you are in a place like [github pages](https://pages.github.com/) and don't have access to a database there and/or your are not currently interested in puting a database solution on a server. Here is how you can use it:
+
+### SPA
+_**browser:**_
+```js
+ //  code in https://myApp.com
+  let twizlent = twizClient();
+  
+  btn.addListener('onClick', function(){                  // lets say we initiate oauth on click event
+     let args = {
+        server_url:      'https://myServer.com/route',    // address of your node server where twiz-server runs
+        redirection_url: 'https://myApp.com/popUpWindow', // address of your popUp/window page
+         
+        session_data: {                                  // our  arbitrary session data we want 
+           weater: 'Dry, partly cloudy with breeze.',
+           background_noise: 'cicada low frequency',
+           intentions: 'lawfull good'
+        }                                            
+        new_window:{
+           name: 'myPopUpWindow',
+           features: 'resizable=yes,height=613,width=400,left=400,top=300'
+        },
+
+        options:{                                         //  twitter request options  
+           method: 'POST',
+           path:   'statuses/update.json'
+           params: {
+             status: "Hooray, new tweet!"
+           }
+       }
+     }
+  }
+
+```
+ _**browser(different page):**_
+ ```js
+  // https://myApp.com/popUpWindow
+  let twizlent = twizClient();
+
+  let sessionData = twizlent.getSessionData();   // Gets our session_data from re(direction) url 
+                                                 // Can also be called asap in page 
+ 
+ sessionData // {                                    // data we sent              
+           weater: 'Dry, partly cloudy with breeze.',
+           background_noise: 'cicada low frequency',
+           intentions: 'lawfull good'
+        }                                                                   
+  ...     
+```
+If there is no `session data` in url, function returns `undefined` and logs warning on console `noSessionData: 'Unable to find session data in current url'`
+
+## onEnd 
+### [⬑](#contents)
+
+ There is a second argument that is passed to your `tokenFound` handler. The `onEnd(..)` function.
+It's use is to specify your function that will end the request as you see fit. For instance when you would like to use a template engine. `onEnd(..)` fires afther `access protected resources` (api) call but it does not end the response.
+
+_**node.js:**_
+```js
+  app.on('tokenFound', function(found, onEnd){
+
+     found                        
+     .then(function(accessToken){
+         // user's access token received from twitter which you can put in database
+         
+     }, function rejected(err){   // twiz errors
+
+     })
+
+     onEnd(function(apiData, res){ // happens after accessToken is found
+         res.render('signedInUI', { user: apiData.user.name })   // Uses server side template engine
+                                                                // Ends response internally
+     })
+  })
+```
+
+When we get the `access token` in our promise then twiz gets api data and calls your `onEnd(..)` callback with that data and response stream.
+So we've sent the rendered html with `user.name` from data we got from  twitter's `statuses/update.json`
+api. When you are specifying the `onEnd(..)` function then it must end the response or else the request will hang. 
+
+Also if your workflow requires front-end template rendering. You can instead of `res.render(..)` use :
+```js
+res.redirect(302,'/signedInUI');  // redirects the client to the signedInUI template
+```
+Then the `twizlent.finishOAuth(..)` will get this `signedInUI` template in it's `o.data`.
+
+## beforeSend 
+### [⬑](#contents)
+
+On client side the `args.options` object can alse have a `beforeSend` property. It is a function that allows your to manipulate `xhr` instance before request is sent.
+
+_**browser:**_
+```js   
+// https://myApp.com
+  btn.addListener('onClick', function(){                  // lets say we initiate oauth on click event
+     let args = {
+        ...
+        ...
+        options:{                                         //  twitter request options  
+           method: 'POST',
+           path:   'statuses/update.json'
+           params: {
+             status: "Hooray, new tweet!"
+           },
+           beforeSend: function(xhr){
+              // xhr.open(..) is called for you, dont do it
+       
+                 xhr.setRequestHeader('X-My-Header-Name', 'yValue') // in case you whould ever need something like this
+
+              // xhr.send(..) is called for you, dont do it
+           }
+       }
+     } 
+
+```
+
+
+## Callback 
+### [⬑](#contents)
+
+The `args` object can have the `callback` property. You can specify there your callback function which will run **only** if:
+
+1. **Promise is not avalable** 
+
+If there is `Promise`, `OAuth(..)` and `finishOAuth(..)` functions always return promise.
+_**browser:**_
+```js
+args = {
+   ...
+   ...
+   callback: function(o){
+         if(o.error)
+         if(o.data)
+         if(o.window) // or if(o.rederection). When using SPA workflow (o.window), 
+                      // when using web site (o.redirection)  
+
+         o.xhr        // always present in case you need to pull some data from response (like custom headers)      
+   }
+   
+}
+
+try{
+   let twizlent = twizClient();
+   twizlent.OAuth(args)
+}
+catch(err){
+   // twiz errors
+}
+```
+
+If promise is not available and there is no `callback` specified you'le get and error `noCallbackFunc` see [errors](https://github.com/gits2501/twiz#twizlentoauth-rejected-handler)
