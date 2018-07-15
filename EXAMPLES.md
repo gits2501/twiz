@@ -46,6 +46,12 @@ _**browser:**_
 
   let sessionData = twizlent.getSessionData();   // Gets our session_data from re(direction) url 
                                                  // Can also be called asap in page 
+ 
+ sessionData // {                                    // data we sent              
+           weater: 'Dry, partly cloudy with breeze.',
+           background_noise: 'cicada low frequency',
+           intentions: 'lawfull good'
+        }                                                                   
   ...     
 ```
 If there is no `session data` in url, function returns `undefined` and logs warning on console `noSessionData: 'Unable to find session data in current url'`
