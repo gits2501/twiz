@@ -239,21 +239,21 @@ Instead of baking in something like `onStream(..)` function that would handle yo
 
  property  |  description
 ---------  |  ------------- 
-twiz.stream | Flag that indicates request wants third party stream/rest capability
-twiz.twitterOptions | Your args.options from browser, has 'path', 'method' and 'params' properties
-twiz.next | Reference to Express' next() function which runs next middleware (myStream in example)
+twiz.stream | Flag that indicates request wants third party `stream`/`rest` capability
+twiz.twitterOptions | Your `args.options` from browser, has `path`, `method` and `params` properties
+twiz.next | Reference to Express' `next()` function which runs next middleware (myStream in example)
 
-So you can easily see something like onStream handler that:
+So you can easily see something like `onStream` handler that:
  
- 1. checks if request wants custom stream/rest libs
- 2. saves twitterOptions/accessToken to apropriate places to be used in the next middleware 
+ 1. checks if request wants custom `stream`/`rest` libs
+ 2. saves `twitterOptions`/`accessToken` to apropriate places to be used in the next middleware 
  3. when it's done doing its thing, calls the next middleware
 
-As you can see, twiz is not keen to stuff potentialy security sensitive data to 'app' or 'req' objects. It is given to your judgement to place your data where you see fit. 'app' is used as storage in example just as an ilustration of a purpose, maybe you whould want some caching solution like redis/memcache. 
+As you can see, twiz is not keen to stuff potentialy security sensitive data to `app` or `req` objects. It is given to your judgement to place your data where you see fit. `app` is used as storage in example just as an ilustration of a purpose, maybe you whould want some caching solution like `redis`/`memcache`. 
 
 
 ## Chunked responses 
-When making stream requests the response often come as series of data chunks[link] from other end. To consume response in chunk by chunk manner set xhr.onprogress(..)[link] callback in beforeSend function:
+When making stream requests the response often come as series of data [chunks](https://en.wikipedia.org/wiki/Chunked_transfer_encoding) from other end. To consume response in chunk by chunk manner set [xhr.onprogress(..)](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequestEventTarget/onprogress) callback in `beforeSend` function:
 
 _**browser:**_
  ```js
@@ -270,15 +270,15 @@ _**browser:**_
       }
   }
 ```  
-A reference[link] on how to consume chunks. 
+A reference on how to [consume](https://stackoverflow.com/questions/6789703/how-to-write-javascript-in-client-side-to-receive-and-parse-chunked-response-i) chunks. 
 
 1. If your not sending  `content-type`.
 
-   It is good idea to set 'content-type' header on your server before you proxy first chunk back to client or else when stream finialy ends promise will reject with 'noContentType' error. But your will be already consumed in your in onprogress(..) callback.
+   It is good idea to set `content-type` header on your server before you proxy first `chunk` back to client or else when stream finialy ends promise will reject with `noContentType` error. But your data will be already consumed in your in `onprogress(..)` callback.
 
 2. If you are sending `content-type`.
 
-   When your stream is consumed in onprogress() and it ends the promise will still resolve and you will have all your data that stream emmited in o.data. Since your getting your data in onprogress(..) you might not want to receive it in your promise too. Same goes if your using callbacks and not promises. To stop all data from stream to resolve in promise set 'chunked=true' in args.options.
+   When your stream is consumed in `onprogress(..)` and it ends the promise will still resolve and you will have all your data that stream emmited in `o.data`. Since your getting your data in `onprogress(..)` you might not want to receive it in your promise too. Same goes if your using callbacks and not promises. To stop all data from stream to resolve in promise set `chunked=true` in `args.options`.
 
 _**browser:**_
 ```js
