@@ -90,7 +90,7 @@ In order to efficiently and safely use twiz make sure you:
  3. Create [app account](https://apps.twitter.com/app/new) on twitter
  4. Users (of your app) must have twitter accounts 
 
-## [⬑](https://github.com/gits2501/twiz/blob/master/README.md#contents) Usage 
+## Usage [⬑](https://github.com/gits2501/twiz/blob/master/README.md#contents)
 
 
 in browser: 
