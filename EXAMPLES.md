@@ -1,10 +1,11 @@
 
 ## getSessionData 
 
-There is an interesting capability provided by the OAuth 1.0a spec section 6.2.3. "The callback URL MAY include Consumer provided query parameters. The Service Provider MUST retain them unmodified and append the OAuth parameters to the existing query".
- This relates to OAuth step 2. When we redirect user to twitter for obtaining authorization we are *sending* a callback url (I've called it redirection_url) along with request token (not shown in diagrams), which twitter uses to (re)direct user back to app when authorization is done. In that url we can piggy back arbitrary data as query params (to twitter and back to app). Then, when we are (re)directed back to app, we can take back that data. The result is that we have a simple mechanism that allows our data to survive redirections, that is changing window contexts in browser. Which is handy in cases when we have the SPA workflow and everthing happens in one window tab, so data we send from our app's window context can *survive* changing that context to the context of twitter's window on which oauthorization happens and then again finally our apps' window context.
+There is an interesting capability provided by the [OAuth 1.0a](https://oauth.net/core/1.0a/) spec section `6.2.3`. "The callback URL `MAY` include Consumer provided query parameters. The Service Provider `MUST` retain them unmodified and append the `OAuth` parameters to the existing query".
 
- This can also be used for web site workflows, but you'le get the *o.window* reference in that case which also can be used for exact same thing. This mechanism comes in hand when you are in a place like github pages and don't have access to a database there and/or your are not currently interested in puting a database solution on a server. Here is how you can use it:
+ This relates to `OAuth` step 2. When we redirect user to twitter for obtaining `authorization` we are *sending* a `callback url` (I've called it `redirection_url`) along with `request token` (not shown in diagrams), which twitter uses to (re)direct user back to app when authorization is done. In that url we can piggy back arbitrary data as query params (to twitter and back to app). Then, when we are (re)directed back to app, we can take back that data. The result is that we have a simple mechanism that allows our data to survive redirections, that is changing window contexts in browser. Which is handy in cases when we have the `SPA` workflow and everthing happens in one window tab, so data we send from our app's window context can *survive* changing that context to the context of twitter's window on which `authorization` happens and then again finally our apps' window context.
+
+ This can also be used for web site workflows, but you'le get the `o.window` reference in that case which also can be used for exact same thing. This mechanism comes in hand when you are in a place like [github pages](https://pages.github.com/) and don't have access to a database there and/or your are not currently interested in puting a database solution on a server. Here is how you can use it:
 
 ### SPA
 *browser:*
@@ -47,12 +48,12 @@ There is an interesting capability provided by the OAuth 1.0a spec section 6.2.3
                                                  // Can also be called asap in page 
   ...     
 ```
-If there is no session data in url, function returns `undefined` and logs warning on console `noSessionData: 'Unable to find session data in current url'`
+If there is no `session data` in url, function returns `undefined` and logs warning on console `noSessionData: 'Unable to find session data in current url'`
 
 ## onEnd 
 
- There is a second argument that is passed to your 'tokenFound' handler. The onEnd(..) function.
-It's use is to specify your function that will end the request as you see fit. For instance when you would like to use a template engine. onEnd(..) fires afther access protected resources (api) call but it does not end the response.
+ There is a second argument that is passed to your `tokenFound` handler. The `onEnd(..)` function.
+It's use is to specify your function that will end the request as you see fit. For instance when you would like to use a template engine. `onEnd(..)` fires afther `access protected resources` (api) call but it does not end the response.
 
 *node.js:*
 ```js
@@ -73,11 +74,11 @@ It's use is to specify your function that will end the request as you see fit. F
   })
 ```
 
-When we get the `access token` in our promise then twiz gets api data and calls your onEnd callback with that data and response stream.
-So we've sent the rendered html with user.name from data we got from  twitter's statuses/update.json
-api. When you are specifying the onEnd function then it must end the response or else the request will hang. 
+When we get the `access token` in our promise then twiz gets api data and calls your `onEnd(..)` callback with that data and response stream.
+So we've sent the rendered html with `user.name` from data we got from  twitter's `statuses/update.json`
+api. When you are specifying the `onEnd(..)` function then it must end the response or else the request will hang. 
 
-Also if your workflow requires front-end template rendering. You can instead on res.render use :
+Also if your workflow requires front-end template rendering. You can instead of `res.render(..)` use :
 ```js
 res.redirect(302,'/signedInUI');  // redirects the client to the signedInUI template
 ```
@@ -85,7 +86,7 @@ Then the `twizlent.finishOAuth(..)` will get this `signedInUI` template in it's 
 
 ## beforeSend 
 
-On client side the args.options object can alse have a 'beforeSend' property. It is a function that allows your to manipulate xhr instance before request is sent.
+On client side the `args.options` object can alse have a `beforeSend` property. It is a function that allows your to manipulate `xhr` instance before request is sent.
 
 *browser:*
 ```js   
@@ -114,7 +115,7 @@ On client side the args.options object can alse have a 'beforeSend' property. It
 
 
 ## Callback 
-The args object can have the 'callback' property. You can specify there your callback function which will run **only** if
+The `args` object can have the `callback` property. You can specify there your callback function which will run **only** if:`
 
 1. **Promise is not avalable**
 
@@ -144,7 +145,7 @@ catch(err){
 }
 ```
 
-If promise is not available and there is no callback specified you'le get and error 'noCallbackFunc' see errors[link]
+If promise is not available and there is no `callback` specified you'le get and error `noCallbackFunc` see errors[link]
 
 ## Stream 
 
