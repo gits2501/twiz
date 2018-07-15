@@ -28,7 +28,7 @@ Twiz does authentication and/or authorization to Twitter with [OAuth 1.0a](https
     * [continueOAuth(..)](#twizcontinueoauth)
     * [haste(..)](#twizhaste)
     * [verifyCredentials(..)](#verifycredentials)
-   
+ * [Developers](#developers)
 
 ## Intro
 Many Twitter apis require user authentication (`access token`) before usage. `OAuth 1.0a` is (essencially a digital signature) process of letting know who (which app) wants to use an api and on which user's behalf. In other words you tell Twitter who you are, if twitter is ok with you it lets you to ask an user of your website (with twitter account), on authorization page, if he agrees that you act on its behalf (like post tweets on user's profile ect ...)
@@ -97,9 +97,9 @@ In order to efficiently and safely use twiz make sure you:
 
 in browser: 
 
-    * CDN - <script src="link here"></script>
+    CDN - <script src="link here"></script>
     
-    * bower - comming soon
+    bower - comming soon
 	 
 on server:  
 
@@ -392,3 +392,18 @@ Any **not** `200OK` response are considered as an `accessTokenNotVerified` error
 accessTokenNotVerified | `json string`
 
 Note that the `error.message` will be a `json string` taken from `response` payload so you can have exact twitter error description, error code etc ...
+
+### Developers
+### [⬑](https://github.com/gits2501/twiz/blob/master/README.md#contents)
+
+Before making changes:
+
+    npm run start   // makes runs `build` and `watch` scripts
+      
+When you're done:      
+
+    npm run build
+      
+To test:       
+
+    npm test
