@@ -10,7 +10,14 @@ Twitter OAuth wizard.
     * [Access Token](https://github.com/gits2501/twiz/blob/master/README.md#access-token)
     * [Verify Credentials](https://github.com/gits2501/twiz/blob/master/README.md#verify-credentials)
   * [Web Site](https://github.com/gits2501/twiz/blob/master/README.md#web-site)  
-* [Advanced]()  
+* [Additional use](https://github.com/gits2501/twiz/blob/master/EXAMPLES.md)
+  * [Stream](https://github.com/gits2501/twiz/blob/master/EXAMPLES.md#stream)
+  * [Chunked responses](https://github.com/gits2501/twiz/blob/master/EXAMPLES.md#chunked-responses)
+  * [getSessionData](https://github.com/gits2501/twiz/blob/master/EXAMPLES.md#getsessiondata)
+  * [onEnd](https://github.com/gits2501/twiz/blob/master/EXAMPLES.md#onend)
+  * [beforeSend](https://github.com/gits2501/twiz/blob/master/EXAMPLES.md#beforesend)
+  * [callback](https://github.com/gits2501/twiz/blob/master/EXAMPLES.md#callback)
+   
    
 
 
@@ -36,9 +43,10 @@ Twitter apis for authorization and authentication do not use `CORS`, that is, th
 2. Uppon receiving `request token` data, user is redirected to twitter to obtain user authorization :
   * if you are using `/oauth/authorize` enpoint for redirection, then every time user is redirected there it lands on authorization [(interstitials) page](https://developer.twitter.com/en/docs/twitter-for-websites/log-in-with-twitter/guides/browser-sign-in-flow.html). Even if user previously authorized your app.
   
-  * if you are using `/oauth/authenticate` enpoint for redirection, then only first time user is redirected it lands on authorization page. On any subsequent redirection twitter *remembers* first one and user is directed back again to the app. No authorization page is showed, the user is not involved directly. But historicaly it [didn't work](https://twittercommunity.com/t/twitter-app-permission-not-honored-on-subsequent-oauth-authenticate-calls/94440) like it should, for a time. 
- Two were actually the same. 
- > But note there still can be a redirection page flash.
+  * if you are using `/oauth/authenticate` enpoint for redirection, then only first time user is redirected it lands on authorization page. On any subsequent redirection twitter *remembers* first one and user is directed back again to the app. No authorization page is showed, the user is not involved directly. Historicaly it [didn't work](https://twittercommunity.com/t/twitter-app-permission-not-honored-on-subsequent-oauth-authenticate-calls/94440) like it should, for a time. 
+ Two were actually the same where `/oauth/authenticate` acted like `/oauth/authorize`. 
+ 
+ > Even there is no authorization page showed, there still can be a redirection page flash.
 
 3. Since user approved your `request token`, now it is used to get user's `access token`. Server signs your request and sends it. Twitter does things similarly like in first step and grants you an `access token` which belongs to the user who authorized it in second step.
 
@@ -66,7 +74,7 @@ Three differences are:
      
      This is usefull for scenarios where you save user's `access token` after first authorization and then just chech for it's freshness before you go for an api request. User do not need to be bothered every time with 3-leg `OAuth`, there is no interstitials page. With haste you are the one who *remembers* user authorization instead of letting twitter to do it (like it does on the `/oauth/authenticate`). All in order to have smooth user experience, like for instance in case `/oauth/authenticate` stops working as expected. Or when redirection page flashes for the moment before user is returned to app and you would like to remove it. 
      
-     If this is the first time a user is making a request (and we dont have the `access token`) then we just continue the whole `OAuth flow` (on diagram the *no* branch). One of twiz's features is very easy switching between any of your `OAuth` workflows while having a redundant machanism for smooth user experience (`haste`) as an option.
+     If this is the first time a user is making a request (and we dont have the `access token`) then we just continue the whole `OAuth flow` (on diagram the *no* branch). One of twiz's features is very easy switching between any of your `OAuth` workflows while having a redundant mechanism for smooth user experience (`haste`) as an option.
 
 In order to efficiently and safely use twiz make sure you:
  1. **Provide HTTPS** all the way (client ---> server --> twitter),
@@ -309,7 +317,8 @@ Test drive [here]
 Additio
 
 ## Errors
-`twizlent.OAuth(..)` `rejected(..)` handler:
+### Browser
+#### `twizlent.OAuth(..)` `rejected(..)` handler:
 
 error.name  |  error.message
 ----------- | --------------
@@ -318,9 +327,10 @@ serverUrlNotSet | You must proivide `server_url` to which request will be sent.
 optionNotSet | Check that `method` and `path` are set.
 noCallbackFunc | You must specify a callback function. 
 callbackURLnotConfirmed | `Redirection(callback) url` you specified wasn't confirmed by Twitter. 
-noContentType | Failed to get `content-type` header from response. Possible `CORS` restrictions or header is missing. chunkedResponseWarning | Stream is consumed chunk by chunk in `xhr.onprogress(..)` callback.
+noContentType | Failed to get `content-type` header from response. Possible `CORS` restrictions or header is missing.
+chunkedResponseWarning | Stream is consumed chunk by chunk in `xhr.onprogress(..)` callback.
 
-`twizlent.finishOAuth(..)` `rejected(..)` handler:
+#### `twizlent.finishOAuth(..)` `rejected(..)` handler:
 
 error.name  |  error.message
 ----------- | --------------
@@ -334,12 +344,16 @@ noRepeat | Cannot make another request with same `redirection(callback)` url.
 spaWarning | Twitter authorization data not found in url.
 
 `spaWarning` and `noRepeat` are errors that have informative character and usually you dont have to pay attention to them. They happen when user loads/relods page where `twizlent.finishOAuth(..)` is called on every load, imediately (which is valid). They are indications that `twizlent.finishOAuth(..)` will not run. For example, `spaWarning` means `twizlent.finishOAuth(..)` won't run on url that doesn't contain valid twitter authorization data. `noRepeat` means that you cannot make two requests with same twitter authorization data (like same `request token`). Check the [Stream](link) for explanation of `chunkedResponseWarning`
+### node.js
+#### `twiz.continueOAuth(..)` 
+Errors are ones that can happen on `request` or `response` streams (low level) and they are hanled by calling `next(..)`. There are no twiz errors currently for this function. Not `200OK` responses are only piped back to client and are not considered as errors.
 
-`twiz.continueOAuth(..)` errors are ones that can happen on `request` or `response` streams (low level) and they are hanled by calling `next(..)`. There are no twiz errors currently for this function. Not `200OK` responses are only piped back to client and are not considered as errors.
+#### `twiz.haste(..)` 
+Errors work same as `twizlent.continueOAuth(..)`
 
-`twiz.haste(..)` errors work same as `twizlent.continueOAuth(..)`
 
-`verifyCredentials()` any **not** `200OK` response are considered as an `accessTokenNotVerified` error. Express' `next(..)` is called and promise is rejected with the same error. 
+#### `verifyCredentials()`
+Any **not** `200OK` response are considered as an `accessTokenNotVerified` error. Express' `next(..)` is called and promise is rejected with the same error. 
 
  error.name | error.message
  ---------  |  -------------
