@@ -1,5 +1,5 @@
 # Additional use
-Check [usage](https://github.com/gits2501/twiz#usage) before continuing (recomended).
+Check [usage](https://github.com/gits2501/twiz/blob/master/README.md#usage) before continuing (recomended).
 
 ### Contents
   * [Stream](#stream)
