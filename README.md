@@ -2,7 +2,7 @@
 
 Twitter OAuth wizard.
 
-Twiz does authentication and/or authorization to Twitter with OAuth 1.0a, has built in `REST` api support and also supports third party `STREAM` and `REST` libs.
+Twiz does authentication and/or authorization to Twitter with [OAuth 1.0a](https://oauth.net/core/1.0a/), has built in `REST` api support and also supports third party `STREAM` and `REST` libs.
 
 
 ### Contents
@@ -232,7 +232,7 @@ Server is writen as express middleware.
 ```
 ### Access Token
    Currently the minimum of what twiz see as valid `access token` is an object that has properties `oauth_token` and `oauth_token_secret` set. But it can have other parameters, like `screen_name`.
-The `twiz-server` (here twizer) is by default an ending middleware, that is it will end the request. So call it before your error handling middlewares, if any. There are cases when twiz **does not end** the request, check [Stream]() usage. Errors will be sent to the next error handling midleware with `next(err)` calls and same errors will also be piped back to the browser.
+The `twiz-server` (here twizer) is by default an ending middleware, that is it will end the request. So call it before your error handling middlewares, if any. There are cases when twiz **does not end** the request, check [Stream](https://github.com/gits2501/twiz/blob/master/EXAMPLES.md#stream) usage. Errors will be sent to the next error handling midleware with `next(err)` calls and same errors will also be piped back to the browser.
 
 ### Prefligh 
  If your app is not on same domain your browser will preflight request because of `CORS`. So you need to use some preflight middleware before `twiz-server`:
@@ -244,10 +244,10 @@ The `twiz-server` (here twizer) is by default an ending middleware, that is it w
 Currently you only have to set `Access-Control-Allow-Origin` to your app's fqdn address. 
  
 ### Verify credentials 
- The credentials object in fulfileld handler can contain a lot of information. In order to ease the memory 
+ The `credentials` object in fulfileld handler can contain a lot of information. In order to ease the memory 
 footprint you can use parameters object (like one with `skip_status`) to leave out information you don't need. Here [list of params](https://developer.twitter.com/en/docs/accounts-and-users/manage-account-settings/api-reference/get-account-verify_credentials.html) you can use.
  
-////////////////////////////////////////////////////////////////////////////////////
+
 
 ### Web Site
 
@@ -349,10 +349,11 @@ chunkedResponseWarning | Stream is consumed chunk by chunk in `xhr.onprogress(..
 noRepeat | Cannot make another request with same `redirection(callback)` url. 
 spaWarning | Twitter authorization data not found in url.
 
-`spaWarning` and `noRepeat` are errors that have informative character and usually you dont have to pay attention to them. They happen when user loads/relods page where `twizlent.finishOAuth(..)` is called on every load, imediately (which is valid). They are indications that `twizlent.finishOAuth(..)` will not run. For example, `spaWarning` means `twizlent.finishOAuth(..)` won't run on url that doesn't contain valid twitter authorization data. `noRepeat` means that you cannot make two requests with same twitter authorization data (like same `request token`). Check the [Stream](link) for explanation of `chunkedResponseWarning`
+`spaWarning` and `noRepeat` are errors that have informative character and usually you dont have to pay attention to them. They happen when user loads/relods page where `twizlent.finishOAuth(..)` is called on every load, imediately (which is valid). They are indications that `twizlent.finishOAuth(..)` will not run. For example, `spaWarning` means `twizlent.finishOAuth(..)` won't run on url that doesn't contain valid twitter authorization data. `noRepeat` means that you cannot make two requests with same twitter authorization data (like same `request token`). Check the [Stream](https://github.com/gits2501/twiz/blob/master/EXAMPLES.md#stream) for explanation of `chunkedResponseWarning`.
+
 ### Node.js
 #### `twiz.continueOAuth(..)` 
-Errors are ones that can happen on `request` or `response` streams (low level) and they are hanled by calling `next(..)`. There are no twiz errors currently for this function. Not `200OK` responses are only piped back to client and are not considered as errors.
+Errors are ones that can happen on `request` or `response` streams (lower level) and they are hanled by calling `next(..)`. There are no twiz errors currently for this function. Not `200OK` responses are only piped back to client and are not considered as errors.
 
 #### `twiz.haste(..)` 
 Errors work same as `twizlent.continueOAuth(..)`
