@@ -395,7 +395,7 @@ Note that the `error.message` will be a `json string` taken from `response` payl
 
 ### Developers
 ### [⬑](https://github.com/gits2501/twiz/blob/master/README.md#contents)
-
+#### twiz-client (browser)
 Before making changes:
 
     npm run start   // makes runs `build` and `watch` scripts
@@ -404,6 +404,21 @@ When you're done:
 
     npm run build
       
-To test:       
+Lint:
+   
+    npm run lint
+      
+Test:       
 
     npm test
+
+#### twiz-server (node.js)
+
+Make changes.
+Lint:
+
+    npm run lint
+ 
+ Test:
+ 
+    npm run test
