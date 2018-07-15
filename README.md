@@ -102,7 +102,7 @@ on server:
     * npm install twiz-server
 
 ### SPA (singe page apps)
-*browser:*
+_**browser:**_
 ```js  
  // Let's say this code is in your page ->  https://myApp.com 
 
@@ -163,6 +163,8 @@ Then `o.redirection` is set to `true` in fullfuled handler. Also note that here 
 
 ### Authorize or Authenticate
 By default `twizlent.OAuth(..)` will use the `/oauth/authorize` endpoint , but you can use the `/oauth/authenticate` like this:
+
+_**browser:**_
 ```js
 let args = {
     ...
@@ -176,7 +178,8 @@ let args = {
 This is the so called [Sign in with Twitter](https://developer.twitter.com/en/docs/twitter-for-websites/log-in-with-twitter/guides/browser-sign-in-flow) flow, the one that uses `/oauth/authenticate` endpoint. That's how you would utilize it.
 
 Server is writen as express middleware.
-*node.js:*
+
+_**node.js:**_
 ```js
   var twizServer = require('twiz-server');
   var express    = require('express');
@@ -236,6 +239,7 @@ The `twiz-server` (here twizer) is by default an ending middleware, that is it w
 
 ### Prefligh 
  If your app is not on same domain your browser will preflight request because of `CORS`. So you need to use some preflight middleware before `twiz-server`:
+ _**node.js:**_
 ```js
  ...
  app.use(yourPreflight);
@@ -253,7 +257,7 @@ footprint you can use parameters object (like one with `skip_status`) to leave o
 
 Web Site workflow is very similar to that of a `SPA`. You just need to put the `new_window` object to args to specifiy your new popUp / window characteristics and call `twizlent.finishOAuth(..)`  from code in that popUp / window . Note that browser doesn't differentiate much between a popUp and a new window (new tab). Main difference is in dimentions.  
 
-*browser:*
+_**browser:**_
 ```js
  // Let's say this code is in your page ->  https://myApp.com 
 
@@ -297,7 +301,7 @@ btn.addListener('onClick', function(){                  // lets say we initiate 
 The `redirection_url` is now different then the page url then one from which we are making the request. Also we have `new_window` where we specify the window/popUp features where `redirection_url` will land . Making this more of a website use case.
 The `new_window` object contains two properties, `name` and `features`, they act the same as `windowName` and `windowFeatures` in [window.open()](https://developer.mozilla.org/en-US/docs/Web/API/Window/open). Note `o.window` reference to newly opened window / popUp instead of `o.redirection`. 
 
-*browser(different page):*
+_**browser(different page):**_
 ```js
  // code in https://myApp.com/popUpWindow
   twizlent.finishOAuth(args);  // Also can be called asap in page
@@ -316,7 +320,7 @@ The `new_window` object contains two properties, `name` and `features`, they act
 What this enables is to have completely custom popUp pages but same familiar popUp like for instance when you whould like to share something on twitter by pressing a twitter share button. Currently the downside is that users of the web site use case will get a popUp warning by browser which they have to allow before popUp apears.
 Test drive [here]
                             
-*node.js:*
+_**node.js:**_
 ```js 
   // Same code as in SPA use case;
 ```
