@@ -65,7 +65,7 @@ _**node.js:**_
             if(twiz.stream){                          // Check that user indicated stream
                app.options     = twiz.twitterOptions; // Twitter request options as in the args.options on client
                app.accessToken = accessToken;         // save access token to app (just as an example)     
-               twiz.next()                            // Jump to next middleware, here it's 'myStream'                                 
+               twiz.next()                            // Jump to next middleware, here it's 'myStream(..)'                                 
             }
             else twiz.haste(accessToken);            // maybe you'll want haste
        }, function rejected(err){
@@ -81,7 +81,7 @@ _**node.js:**_
            if(twiz.stream){
               app.options     = twiz.twitterOptions; // Save twitter request options
               app.accessToken = accessToken;         // Save access token
-              twiz.next()                            // Jump to next middleware
+              twiz.next()                            // Jump to next middleware, here it is 'myStream(..)'
            }            
 
        }, function rejected(err){
