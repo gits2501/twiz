@@ -118,7 +118,7 @@ The args object can have the 'callback' property. You can specify there your cal
 
 1. **Promise is not avalable**
 
-If there is `Promise`, function always returns promise.
+If there is `Promise`, `OAuth(..)` and `finishOAuth(..)` functions always return promise.
 
 ```js
 args = {
@@ -144,11 +144,11 @@ catch(err){
 }
 ```
 
-If promise is not avalale and there is no callback specified you'le get and error 'noCallbackFunc' see errors[link]
+If promise is not available and there is no callback specified you'le get and error 'noCallbackFunc' see errors[link]
 
 ## Stream 
 
-With twiz using stream means using third party STREAM and/or REST libraries, while letting twiz to take care only for user authentication, that is getting an access token. In other words stream efectively turns off built in REST capability.
+With twiz using stream means using third party `STREAM` and/or `REST` libraries, while letting twiz to take care only for user authentication, that is getting an access token. In other words stream efectively turns off built in REST capability.
 Specify stream in client by passing 'args.stream = true'. 
 
 *browser:*
