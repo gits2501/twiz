@@ -18,7 +18,7 @@ Twiz does authentication and/or authorization to Twitter with [OAuth 1.0a](https
   * [Chunked responses](/EXAMPLES.md#chunked-responses)
   * [getSessionData](/EXAMPLES.md#getsessiondata)
   * [onEnd](/EXAMPLES.md#onend)
-  * [beforeSend]/EXAMPLES.md#beforesend)
+  * [beforeSend](/EXAMPLES.md#beforesend)
   * [callback](/EXAMPLES.md#callback)
 * [Errors](#errors)
   * [Browser](#browser)
