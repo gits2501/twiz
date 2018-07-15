@@ -236,8 +236,9 @@ _**node.js:**_
 ```
 
 Instead of baking in something like `onStream(..)` function that would handle your own `stream/rest` requests, in `hasteOrOAuth` and `tokenFound` events you are given 3 basic building blocks for creating such `onStream(..)` handler. With the exception of `access token` that you've got already, they are:
-property | description
--------- | ----------- 
+
+ property  |  description
+---------  |  ------------- 
 twiz.stream | Flag that indicates request wants third party stream/rest capability
 twiz.twitterOptions | Your args.options from browser, has 'path', 'method' and 'params' properties
 twiz.next | Reference to Express' next() function which runs next middleware (myStream in example)
