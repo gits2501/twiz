@@ -17,6 +17,14 @@ Twitter OAuth wizard.
   * [onEnd](https://github.com/gits2501/twiz/blob/master/EXAMPLES.md#onend)
   * [beforeSend](https://github.com/gits2501/twiz/blob/master/EXAMPLES.md#beforesend)
   * [callback](https://github.com/gits2501/twiz/blob/master/EXAMPLES.md#callback)
+* [Errors](https://github.com/gits2501/twiz#errors)
+  * [Browser](https://github.com/gits2501/twiz#browser)
+    * [OAuth(..)](https://github.com/gits2501/twiz#twizlentoauth-rejected-handler)
+    * [finishOAuth(..)](https://github.com/gits2501/twiz#twizlentfinishoauth-rejected-handler)
+  * [Node.js](https://github.com/gits2501/twiz#nodejs)
+    * [continueOAuth(..)](https://github.com/gits2501/twiz#twizcontinueoauth)
+    * [haste(..)](https://github.com/gits2501/twiz#twizhaste)
+    * [verifyCredentials(..)](https://github.com/gits2501/twiz#verifycredentials)
    
    
 
@@ -344,7 +352,7 @@ noRepeat | Cannot make another request with same `redirection(callback)` url.
 spaWarning | Twitter authorization data not found in url.
 
 `spaWarning` and `noRepeat` are errors that have informative character and usually you dont have to pay attention to them. They happen when user loads/relods page where `twizlent.finishOAuth(..)` is called on every load, imediately (which is valid). They are indications that `twizlent.finishOAuth(..)` will not run. For example, `spaWarning` means `twizlent.finishOAuth(..)` won't run on url that doesn't contain valid twitter authorization data. `noRepeat` means that you cannot make two requests with same twitter authorization data (like same `request token`). Check the [Stream](link) for explanation of `chunkedResponseWarning`
-### node.js
+### Node.js
 #### `twiz.continueOAuth(..)` 
 Errors are ones that can happen on `request` or `response` streams (low level) and they are hanled by calling `next(..)`. There are no twiz errors currently for this function. Not `200OK` responses are only piped back to client and are not considered as errors.
 
