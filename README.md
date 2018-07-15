@@ -11,7 +11,7 @@ Twiz does authentication and/or authorization to Twitter with [OAuth 1.0a](https
   * [SPA](https://github.com/gits2501/twiz/blob/master/README.md#spa-singe-page-apps)
     * [Authorize or Authenticate](https://github.com/gits2501/twiz/blob/master/README.md#authorize-or-authenticate)
     * [Access Token](https://github.com/gits2501/twiz/blob/master/README.md#access-token)
-    * [Verify Credentials](https://github.com/gits2501/twiz/blob/master/README.md#verify-credentials)
+    * [Verify Credentials](#verify-credentials)
   * [Web Site (pop-ups)](https://github.com/gits2501/twiz/blob/master/README.md#web-site)  
 * [Additional use](https://github.com/gits2501/twiz/blob/master/EXAMPLES.md)
   * [Stream](https://github.com/gits2501/twiz/blob/master/EXAMPLES.md#stream)
@@ -90,7 +90,8 @@ In order to efficiently and safely use twiz make sure you:
  3. Create [app account](https://apps.twitter.com/app/new) on twitter
  4. Users (of your app) must have twitter accounts 
 
-## Usage [⬑](https://github.com/gits2501/twiz/blob/master/README.md#contents)
+## Usage 
+[⬑](https://github.com/gits2501/twiz/blob/master/README.md#contents)
 
 
 in browser: 
