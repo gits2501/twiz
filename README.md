@@ -393,7 +393,7 @@ accessTokenNotVerified | `json string`
 
 Note that the `error.message` will be a `json string` taken from `response` payload so you can have exact twitter error description, error code etc ...
 
-### Developers
+## Developers
 ### [⬑](https://github.com/gits2501/twiz/blob/master/README.md#contents)
 #### twiz-client (browser)
 Before making changes:
