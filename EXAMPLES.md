@@ -60,7 +60,7 @@ _**node.js:**_
        // If you are storing tokens in persistent memory code can look like this: 
        // (this step is optional)
  
-       verifyCredentials(accessToken, {skip_})              
+       verifyCredentials(accessToken, {skip_status: true})              
        .then(function fullfiled(credentials){
             if(twiz.stream){                          // Check that user indicated stream
                app.options     = twiz.twitterOptions; // Twitter request options as in the args.options on client
