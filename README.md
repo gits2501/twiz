@@ -402,12 +402,12 @@ Before making changes:
     npm run start   // makes runs `build` and `watch` scripts
       
 When you're done:      
-
-    npm run build
-      
-Lint:
    
     npm run lint
+
+Build:
+    
+    npm run build
       
 Test:       
 
