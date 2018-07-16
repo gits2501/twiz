@@ -84,15 +84,16 @@ Three differences are:
      
      If this is the first time a user is making a request (and we dont have the `access token`) then we just continue the whole `OAuth flow` (on diagram the *no* branch). One of twiz's features is very easy switching between any of your `OAuth` workflows while having a redundant mechanism for smooth user experience (`haste`) as an option.
 
+
+## Usage 
+
+### [⬑](https://github.com/gits2501/twiz/blob/master/README.md#contents)
+
 In order to efficiently and safely use twiz make sure you:
  1. **Provide HTTPS** all the way (client ---> server --> twitter),
  2. In browser install `twiz-client`, on server install `twiz-server` 
  3. Create [app account](https://apps.twitter.com/app/new) on twitter
  4. Users (of your app) must have twitter accounts 
-
-## Usage 
-
-### [⬑](https://github.com/gits2501/twiz/blob/master/README.md#contents)
 
 
 in browser: 
