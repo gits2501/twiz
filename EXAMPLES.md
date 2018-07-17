@@ -92,6 +92,15 @@ _**node.js:**_
    app.use(function myStream(req, res, next){      // your own streaming implementation, must end response 
        let accessToken = app.accessToken
        let options     = app.twitterOptions            // same as in args.options
+       
+       options; // {          
+                     path:   'media/upload',
+                     method: 'POST',
+                     params: {
+                     source: 'image.jpg',
+                        ...  // can contain your own properties 
+                        ... 
+                   }
 
       // your code for STREAM and/or REST apis ...
    })
@@ -117,7 +126,7 @@ As you can see, twiz is not keen to stuff potentialy security sensitive data to 
 ## Chunked responses 
 ### [⬑](#contents)
 
-When making stream requests the response often come as series of data [chunks](https://en.wikipedia.org/wiki/Chunked_transfer_encoding) from other end. To consume response in chunk by chunk manner set [xhr.onprogress(..)](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequestEventTarget/onprogress) callback in `beforeSend` function:
+When making stream requests the response often come as series of data [chunks](https://en.wikipedia.org/wiki/Chunked_transfer_encoding) from the other end. To consume response in chunk by chunk manner set [xhr.onprogress(..)](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequestEventTarget/onprogress) callback in `beforeSend` function:
 
 _**browser:**_
  ```js
