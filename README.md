@@ -87,7 +87,7 @@ Three differences are:
 
 ## Usage 
 
-### [⬑](https://github.com/gits2501/twiz/blob/master/README.md#contents)
+### [⬑](#contents)
 
 In order to efficiently and safely use twiz make sure you:
  1. **Provide HTTPS** all the way (client ---> server --> twitter),
@@ -168,7 +168,7 @@ Then `o.redirection` is set to `true` in fullfuled handler. Also note that here 
 
 ### Authorize or Authenticate
 
-### [⬑](https://github.com/gits2501/twiz/blob/master/README.md#contents)
+### [⬑](#contents)
 By default `twizlent.OAuth(..)` will use the `/oauth/authorize` endpoint , but you can use the `/oauth/authenticate` like this:
 
 _**browser:**_
@@ -242,13 +242,13 @@ _**node.js:**_
 ```
 ### Access Token
 
-### [⬑](https://github.com/gits2501/twiz/blob/master/README.md#contents)
+### [⬑](#contents)
    Currently the minimum of what twiz see as valid `access token` is an object that has properties `oauth_token` and `oauth_token_secret` set. But it can have other parameters, like `screen_name`.
 The `twiz-server` (here twizer) is by default an ending middleware, that is it will end the request. So call it before your error handling middlewares, if any. There are cases when twiz **does not end** the request, check [Stream](https://github.com/gits2501/twiz/blob/master/EXAMPLES.md#stream) usage. Errors will be sent to the next error handling midleware with `next(err)` calls and same errors will also be piped back to the browser.
 
 ### Prefligh 
 
-### [⬑](https://github.com/gits2501/twiz/blob/master/README.md#contents)
+### [⬑](#contents)
  If your app is not on same domain your browser will preflight request because of `CORS`. So you need to use some preflight middleware before `twiz-server`:
  _**node.js:**_
 ```js
@@ -260,7 +260,7 @@ Currently you only have to set `Access-Control-Allow-Origin` to your app's fqdn 
  
 ### Verify credentials 
 
-### [⬑](https://github.com/gits2501/twiz/blob/master/README.md#contents)
+### [⬑](#contents)
  The `credentials` object in fulfileld handler can contain a lot of information. In order to ease the memory 
 footprint you can use parameters object (like one with `skip_status`) to leave out information you don't need. Here [list of params](https://developer.twitter.com/en/docs/accounts-and-users/manage-account-settings/api-reference/get-account-verify_credentials.html) you can use.
  
@@ -268,7 +268,7 @@ footprint you can use parameters object (like one with `skip_status`) to leave o
 
 ### Web Site
 
-### [⬑](https://github.com/gits2501/twiz/blob/master/README.md#contents)
+### [⬑](#contents)
 
 Web Site workflow is very similar to that of a `SPA`. You just need to put the `new_window` object to args to specifiy your new popUp / window characteristics and call `twizlent.finishOAuth(..)`  from code in that popUp / window . Note that browser doesn't differentiate much between a popUp and a new window (new tab). Main difference is in dimentions.  
 
@@ -344,7 +344,7 @@ _**node.js:**_
 ## Errors
 
 
-### [⬑](https://github.com/gits2501/twiz/blob/master/README.md#contents)
+### [⬑](#contents)
 
 ### Browser
 #### `twizlent.OAuth(..)` `rejected(..)` handler:
@@ -376,7 +376,7 @@ spaWarning | Twitter authorization data not found in url.
 
 ### Node.js
 
-### [⬑](https://github.com/gits2501/twiz/blob/master/README.md#contents)
+### [⬑](#contents)
 
 #### `twiz.continueOAuth(..)` 
 Errors are ones that can happen on `request` or `response` streams (lower level) and they are hanled by calling `next(..)`. There are no twiz errors currently for this function. Not `200OK` responses are only piped back to client and are not considered as errors.
@@ -395,7 +395,7 @@ accessTokenNotVerified | `json string`
 Note that the `error.message` will be a `json string` taken from `response` payload so you can have exact twitter error description, error code etc ...
 
 ## Developers
-### [⬑](https://github.com/gits2501/twiz/blob/master/README.md#contents)
+### [⬑](#contents)
 #### twiz-client (browser)
 Before making changes:
 
