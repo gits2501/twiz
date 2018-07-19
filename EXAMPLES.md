@@ -93,14 +93,15 @@ _**node.js:**_
        let accessToken = app.accessToken
        let options     = app.twitterOptions            // same as in args.options
        
-       options; // {          
+       options; /* {          
                      path:   'media/upload',
                      method: 'POST',
                      params: {
                      source: 'image.jpg',
                         ...  // can contain your own properties 
                         ... 
-                   }
+                   } 
+                */
 
       // your code for STREAM and/or REST apis ...
    })
