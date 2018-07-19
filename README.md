@@ -4,6 +4,10 @@ Twitter OAuth wizard.
 
 Twiz does authentication and/or authorization to Twitter with [OAuth 1.0a](https://oauth.net/core/1.0a/), has built in `REST` api support and also supports third party `STREAM` and `REST` libs.
 
+twiz-client  |  twiz-server
+------------ | ----------
+[![Build Status](https://travis-ci.org/gits2501/twiz-client.svg?branch=master)](https://travis-ci.org/gits2501/twiz-client) | [![Build Status](https://travis-ci.org/gits2501/twiz-server.svg?branch=master)](https://travis-ci.org/gits2501/twiz-server)
+[![Coverage Status](https://coveralls.io/repos/github/gits2501/twiz-client/badge.svg?branch=master)](https://coveralls.io/github/gits2501/twiz-client?branch=master)| [![Coverage Status](https://coveralls.io/repos/github/gits2501/twiz-server/badge.svg?branch=master)](https://coveralls.io/github/gits2501/twiz-server?branch=master) 
 
 ### Contents
 * [Intro](#intro)
@@ -39,7 +43,7 @@ It happens to be a 3-leg (step) dance, it's implementation could look like this:
 
 As you can see there are 3 actors. Your web app/site, your server and twitter.  
 Twitter apis for authorization and authentication do not use `CORS`, that is, they do not emit `CORS` headers. So we cant send request to twitter directly from browser, but rather proxy them trough a Server, since request sent from server do not have any `CORS` restrictions applied. Your app is identified with `CONSUMER_KEY` and `CONSUMER_SECRET`. Both of which you get from twitter when you [create new app](https://apps.twitter.com/).
-
+ 
 > On Twitter, user is internally associated with the a`ccess token`.
  Like user's `access token` , your app's `key` and `secret` are extreamly sensitive information. If anyone whould to get your app's key/secret then it can send requests to twitter just like they were sent from your app. It can try to mock you. Usually that's not what you want. Also, javascript is in plain text form in browser so we should never have our `CONSUMER_KEY/SECRET` there but on server. This is another good reason why we need a server to proxy our requests. 
 > Likewise if anyone is to get user's `access token`, then it may be able to send requests on user's behalf (who may actually never visited an app) and/or authorized such actions for that app. Altough, my guess is not in easy and straightforward way. 
