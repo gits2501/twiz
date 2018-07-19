@@ -323,4 +323,4 @@ catch(err){
 }
 ```
 
-If promise is not available and there is no `callback` specified you'le get and error `noCallbackFunc` see [errors](https://github.com/gits2501/twiz#twizlentoauth-rejected-handler)
+If promise is not available and there is no `callback` specified you'le get and error `noCallbackFunc` see [errors](/README.md#twizlentoauth-rejected-handler)
