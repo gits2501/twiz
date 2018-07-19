@@ -152,7 +152,7 @@ A reference on how to [consume](https://stackoverflow.com/questions/6789703/how-
 
 2. If you are sending `content-type`.
 
-   When your stream is consumed in `onprogress(..)` and it ends the promise will still resolve and you will have all your data that stream emmited in `o.data`. Since your getting your data in `onprogress(..)` you might not want to receive it in your promise too. Same goes if your using callbacks and not promises. To stop all data from stream to resolve in promise set `chunked=true` in `args.options`.
+   When your stream is consumed in `onprogress(..)` and it ends the promise will still resolve and you will have all your data that stream emmited in `o.data` also. Since your getting your data in `onprogress(..)` you might not want to receive it in your promise too. Same goes if your using callbacks and not promises. To stop all data from stream to resolve in promise set `chunked=true` in `args.options`.
 
 _**browser:**_
 ```js
