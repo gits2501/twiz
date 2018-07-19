@@ -1,4 +1,4 @@
-# twiz (work in progress)
+# twiz 
 
 Twitter OAuth wizard.
 
