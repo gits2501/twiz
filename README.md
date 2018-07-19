@@ -344,7 +344,7 @@ _**node.js:**_
 ## Errors
 
 
-### [⬑](#contents)
+
 
 ### Browser
 #### `twizlent.OAuth(..)` `rejected(..)` handler:
