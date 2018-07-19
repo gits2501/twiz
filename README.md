@@ -9,6 +9,10 @@ twiz-client  |  twiz-server
 [![Build Status](https://travis-ci.org/gits2501/twiz-client.svg?branch=master)](https://travis-ci.org/gits2501/twiz-client) | [![Build Status](https://travis-ci.org/gits2501/twiz-server.svg?branch=master)](https://travis-ci.org/gits2501/twiz-server)
 [![Coverage Status](https://coveralls.io/repos/github/gits2501/twiz-client/badge.svg?branch=master)](https://coveralls.io/github/gits2501/twiz-client?branch=master)| [![Coverage Status](https://coveralls.io/repos/github/gits2501/twiz-server/badge.svg?branch=master)](https://coveralls.io/github/gits2501/twiz-server?branch=master) 
 
+> `twiz-client` is a js script.
+
+> `twiz-server` is Express middleware.
+
 ### Contents
 * [Intro](#intro)
 * [Usage](#usage)
