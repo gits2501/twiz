@@ -108,11 +108,11 @@ in browser:
 
      
    
-    CDN ->  <script src="https://cdn.jsdelivr.net/npm/twiz-client/src/twiz-client_bundle.min.js"></script>
+    CDN:  <script src="https://cdn.jsdelivr.net/npm/twiz-client/src/twiz-client_bundle.min.js"></script>
    
-    bower ->  comming soon
+    bower:  comming soon
 	 
-    local ->  <script src="src/twiz-client_bundle.js"></script>	 
+    local:  <script src="src/twiz-client_bundle.js"></script>	 
 	 
 	 
 on server:  
