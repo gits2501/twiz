@@ -98,7 +98,7 @@ Three differences are:
 ### [⬑](#contents)
 
 In order to efficiently and safely use twiz make sure you:
- 1. **Provide HTTPS** all the way (client ---> server --> twitter),
+ 1. **Provide HTTPS** all the way (client ---> server --> twitter)
  2. In browser install `twiz-client`, on server install `twiz-server` 
  3. Create [app account](https://apps.twitter.com/app/new) on twitter
  4. Users (of your app) must have twitter accounts 
