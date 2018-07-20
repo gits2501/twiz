@@ -174,6 +174,8 @@ The only presumtions about a succesfull request is one with `200OK` status code,
 
 Then `o.redirection` is set to `true` in fullfuled handler. Also note that here everything (redirection to twitter, twitter's (re)direction back to app) happens in same window/tab in browser. Check [web site](https://github.com/gits2501/twiz/blob/master/README.md#web-site) workflow for popUps.
 
+[Test drive](https://gits2501.github.io/QuoteOwlet/) SPA (with /oauth/authenticate). 
+
 ### Authorize or Authenticate
 
 ### [⬑](#contents)
