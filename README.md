@@ -106,13 +106,15 @@ In order to efficiently and safely use twiz make sure you:
 
 in browser: 
 
-    CDN - <script src="link here"></script>
-    
+     
+   
+    CDN - <script src="https://cdn.jsdelivr.net/npm/twiz-client/src/twiz-client_bundle.min.js"></script>
+   
     bower - comming soon
 	 
 on server:  
 
-    * npm install twiz-server
+     npm install twiz-server
 
 ### SPA (singe page apps)
 _**browser:**_
