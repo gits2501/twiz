@@ -407,7 +407,7 @@ Note that the `error.message` will be a `json string` taken from `response` payl
 #### twiz-client (browser)
 Before making changes:
 
-    npm run start   // makes runs `build` and `watch` scripts
+    npm run start   // runs `build` and `watch` scripts
       
 When you're done:      
    
