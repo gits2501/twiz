@@ -113,7 +113,11 @@ in browser:
    
     bower:  comming soon
 	 
-    local:  <script src="src/twiz-client_bundle.js"></script>	 
+    local:
+    
+    npm install twiz-client && npm run build
+    
+    Then drop in script:  <script src="src/twiz-client_bundle.js"></script>	 
 	 
 	 
 on server:  
@@ -178,7 +182,7 @@ The only presumtions about a succesfull request is one with `200OK` status code,
 
 `twizlent.OAuth(..)` will bring api data (`o.data`) if `twiz.haste(accessToken)` was called on the server and had `200OK` response. If not and the `twiz.continueOAuth()` is called it will receive `request token` and redirect user to twitter. 
 
-Then `o.redirection` is set to `true` in fullfuled handler. Also note that here everything (redirection to twitter, twitter's (re)direction back to app) happens in same window/tab in browser. Check [web site](https://github.com/gits2501/twiz/blob/master/README.md#web-site) workflow for popUps.
+Then `o.redirection` is set to `true` in fullfuled handler. Also note that here everything (redirection to twitter, twitter's (re)direction back to app) happens in same window/tab in browser. Check [web site](/README.md#web-site) workflow for popUps.
 
 ##### Test drive
 [Test drive](https://gits2501.github.io/QuoteOwlet/) SPA (with /oauth/authenticate). Running on heroku free plan. May appear slow when dyno is waking up.
